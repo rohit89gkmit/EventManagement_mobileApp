@@ -72,3 +72,12 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+#packages
+
+package-lock.json
+
+ Gemfile.lock
+ Pods/
+ .xcode.env.local
+ Podfile.lock
