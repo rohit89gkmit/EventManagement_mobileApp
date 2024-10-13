@@ -5,6 +5,7 @@ import { ROUTES } from '@src/constants/routes';
 import { email_regex } from '@src/constants/constants';
 import CustomBackButton from '@src/components/customBackButton';
 import CustomTextInput from '@src/components/CustomTextInput';
+import  useAsyncStorage  from '@src/hooks/useAsyncStorage'
 
 const SignUpScreen = ({navigation}:SignUpScreenProps) => {
 
@@ -53,13 +54,16 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
       errorObj.password = 'Password is required'
       allTrue = false;
     }
-    setError(errorObj);
+    setError((prevError)=>{return {...errorObj}});
     return allTrue;
   }
 
   const handleSignUpClicked = ()=>{
     const isValidate = validateSignUpForm();
     if(isValidate){
+      // const {saveSignupData,getLoginData}  = useAsyncStorage()
+      // saveSignupData(signUpData);
+      // console.warn(getLoginData(signUpData.email,signUpData.password))
       navigation.navigate(ROUTES.DASHBOARD)
     }
   }
