@@ -1,90 +1,93 @@
-import { Text, View,TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { styles } from './styles'
-import { ROUTES } from '@src/constants/routes';
-import { email_regex } from '@src/constants/constants';
+import {Text, View, TextInput, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {styles} from './styles';
+import {ROUTES} from '@src/constants/routes';
+import {email_regex} from '@src/constants/constants';
 import CustomBackButton from '@src/components/customBackButton';
 import CustomTextInput from '@src/components/CustomTextInput';
-import  useAsyncStorage  from '@src/hooks/useAsyncStorage'
+import useAsyncStorage from '@src/hooks/useAsyncStorage';
 
-const SignUpScreen = ({navigation}:SignUpScreenProps) => {
-
+const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const intialSignUpData = {
     name: '',
     email: '',
     age: 0,
     username: '',
-    password: ''
-  }
+    password: '',
+  };
   const initialErrorObj = {
     name: '',
     email: '',
     age: '',
     username: '',
-    password: ''
-  }
-  const [signUpData, setSignUpData] = useState<signUpFormDataType>(intialSignUpData);
-  const [error,setError] = useState(initialErrorObj);
+    password: '',
+  };
+  const [signUpData, setSignUpData] =
+    useState<signUpFormDataType>(intialSignUpData);
+  const [error, setError] = useState(initialErrorObj);
 
-  const validateSignUpForm = ()=>{
+  const validateSignUpForm = () => {
     const data = {...signUpData};
     const errorObj = initialErrorObj;
     let allTrue = true;
-    if(!data.name){
+    if (!data.name) {
       errorObj.name = 'Name is required';
       allTrue = false;
     }
-    if(!data.email){
-      errorObj.email = 'Email is required'
+    if (!data.email) {
+      errorObj.email = 'Email is required';
       allTrue = false;
     }
-    if(data.email && !RegExp(email_regex).test(data.email)){
-      errorObj.email = 'Invalid Email format'
+    if (data.email && !RegExp(email_regex).test(data.email)) {
+      errorObj.email = 'Invalid Email format';
       allTrue = false;
     }
-    if(!data.age){
-      errorObj.age = 'Age is required'
+    if (!data.age) {
+      errorObj.age = 'Age is required';
       allTrue = false;
     }
-    if(!data.username){
-      errorObj.username = 'Username is required'
+    if (!data.username) {
+      errorObj.username = 'Username is required';
       allTrue = false;
     }
-    if(!data.password){
-      errorObj.password = 'Password is required'
+    if (!data.password) {
+      errorObj.password = 'Password is required';
       allTrue = false;
     }
-    setError((prevError)=>{return {...errorObj}});
+    setError(prevError => {
+      return {...errorObj};
+    });
     return allTrue;
-  }
+  };
 
-  const handleSignUpClicked = ()=>{
+  const handleSignUpClicked = () => {
     const isValidate = validateSignUpForm();
-    if(isValidate){
+    if (isValidate) {
       // const {saveSignupData,getLoginData}  = useAsyncStorage()
       // saveSignupData(signUpData);
       // console.warn(getLoginData(signUpData.email,signUpData.password))
-      navigation.navigate(ROUTES.DASHBOARD)
+      navigation.navigate(ROUTES.MAIN);
     }
-  }
+  };
   return (
     <View style={styles.container}>
-      <CustomBackButton route={ROUTES.LOGIN}/>
+      <CustomBackButton route={ROUTES.LOGIN} />
 
       <View style={styles.textContainer}>
         <Text style={styles.headingText}>Let's get</Text>
         <Text style={styles.headingText}>started</Text>
       </View>
-      
-      <View style={styles.formContainer}>
 
+      <View style={styles.formContainer}>
         <CustomTextInput
           placeholder="Enter your name"
           secured={false}
           iconName="envelope"
           setData={setSignUpData}
         />
-        {error.name!=='' && <Text style={styles.errorTextMessage}>{error.name}</Text>}
+        {error.name !== '' && (
+          <Text style={styles.errorTextMessage}>{error.name}</Text>
+        )}
 
         <CustomTextInput
           placeholder="Enter your email"
@@ -92,7 +95,9 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
           iconName="envelope"
           setData={setSignUpData}
         />
-        {error.email!=='' && <Text style={styles.errorTextMessage}>{error.email}</Text>}
+        {error.email !== '' && (
+          <Text style={styles.errorTextMessage}>{error.email}</Text>
+        )}
 
         <CustomTextInput
           placeholder="Enter your age"
@@ -100,7 +105,9 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
           iconName="envelope"
           setData={setSignUpData}
         />
-        {error.age!=='' && <Text style={styles.errorTextMessage}>{error.age}</Text>}
+        {error.age !== '' && (
+          <Text style={styles.errorTextMessage}>{error.age}</Text>
+        )}
 
         <CustomTextInput
           placeholder="Enter your username"
@@ -108,7 +115,9 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
           iconName="envelope"
           setData={setSignUpData}
         />
-        {error.username!=='' && <Text style={styles.errorTextMessage}>{error.username}</Text>}
+        {error.username !== '' && (
+          <Text style={styles.errorTextMessage}>{error.username}</Text>
+        )}
 
         <CustomTextInput
           placeholder="Enter your password"
@@ -116,10 +125,13 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
           iconName="envelope"
           setData={setSignUpData}
         />
-        {error.password!=='' && <Text style={styles.errorTextMessage}>{error.password}</Text>}
-        
+        {error.password !== '' && (
+          <Text style={styles.errorTextMessage}>{error.password}</Text>
+        )}
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleSignUpClicked}>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={handleSignUpClicked}>
           <Text style={styles.loginText}>Sign up</Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
@@ -130,7 +142,7 @@ const SignUpScreen = ({navigation}:SignUpScreenProps) => {
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default SignUpScreen
+export default SignUpScreen;
