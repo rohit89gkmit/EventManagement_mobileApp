@@ -20,6 +20,7 @@ declare global {
     password: string;
     confirmpassword: string;
     gender: string;
+    storageKey?: string;
   };
   type customTabBarIconProps = {
     focused: boolean;

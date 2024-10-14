@@ -6,7 +6,7 @@ declare global {
     title: string;
     date: Date;
     description: string;
-    attendeeLimit: number;
+    limit: number;
     location: string;
   };
   type customGenderIconProps = {

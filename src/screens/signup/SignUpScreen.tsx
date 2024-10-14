@@ -3,13 +3,12 @@ import React, {useState} from 'react';
 import {styles} from './styles';
 import {ROUTES} from '@src/constants/routes';
 import {
-  email_regex,
+  emailRegex,
   nameRegex,
   ageRegex,
   usernameRegex,
   passwordRegex,
 } from '@src/constants/constants';
-import CustomBackButton from '@src/components/customBackButton';
 import CustomTextInput from '@src/components/CustomTextInput';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import CustomGenderIcon from '@src/components/customgendericon';
@@ -52,7 +51,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
       errorObj.email = 'Email is required';
       allTrue = false;
     }
-    if (data.email && !RegExp(email_regex).test(data.email)) {
+    if (data.email && !emailRegex.test(data.email)) {
       errorObj.email = 'Invalid Email format';
       allTrue = false;
     }
@@ -79,10 +78,10 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         'Password must be at least 6 characters and contain both letters and numbers';
       allTrue = false;
     }
-    if (data.confirmpassword !== data.password) {
-      errorObj.confirmpassword = 'Password do not matches';
-      allTrue = false;
-    }
+    // if (data.confirmpassword !== data.password) {
+    //   errorObj.confirmpassword = 'Password do not matches';
+    //   allTrue = false;
+    // }
     setError(prevError => {
       return {...errorObj};
     });
@@ -91,8 +90,8 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
 
   const handleSignUpClicked = () => {
     const isValidate = validateSignUpForm();
+    const {saveSignupData, getLoginData} = useAsyncStorage();
     if (isValidate) {
-      const {saveSignupData, getLoginData} = useAsyncStorage();
       saveSignupData(signUpData);
       console.warn(getLoginData(signUpData.email, signUpData.password));
       navigation.navigate(ROUTES.MAIN);
@@ -100,11 +99,11 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   };
   return (
     <View style={styles.container}>
-      <CustomBackButton route={ROUTES.LOGIN} />
+      {/* <CustomBackButton route={ROUTES.LOGIN} />
 
-      <View style={styles.textContainer}>
-        <Text style={styles.headingText}>Let's get started</Text>
-      </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.headingText}>Let's get started</Text>
+        </View> */}
 
       <View style={styles.formContainer}>
         <CustomTextInput

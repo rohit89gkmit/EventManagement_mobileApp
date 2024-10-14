@@ -3,10 +3,10 @@ import React, {useState} from 'react';
 import CustomTextInput from '@src/components/CustomTextInput';
 import CustomBackButton from '@src/components/customBackButton';
 import {styles} from './styles';
-import {email_regex} from '@src/constants/constants';
+import {emailRegex} from '@src/constants/constants';
+import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import {ROUTES} from '@src/constants/routes';
 const LoginScreen = ({navigation}: LoginScreenProps) => {
-
   const [loginData, setLoginData] = useState<loginFormDataType>({
     email: '',
     password: '',
@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     if (data.email === '') {
       setError({type: 'email', message: 'Email is required'});
       return false;
-    } else if (!RegExp(email_regex).test(data.email)) {
+    } else if (!emailRegex.test(data.email)) {
       setError({type: 'email', message: 'Invalid Email format'});
       return false;
     } else if (data.password === '') {
@@ -32,11 +32,22 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const handleLoginClicked = () => {
     const isValidateLoginForm = validateLoginForm();
     if (isValidateLoginForm) {
+      const {getLoginData} = useAsyncStorage();
+      getLoginData(loginData.email, loginData.password).then(value => {
+        if (value) {
+          navigation.navigate(ROUTES.MAIN);
+        } else {
+          setError({
+            type: 'password',
+            message: 'Email or password are incorrect',
+          });
+        }
+      });
     }
   };
-  const handleSignUpPress = ()=>{
-    navigation.navigate(ROUTES.SIGNUP)
-  }
+  const handleSignUpPress = () => {
+    navigation.navigate(ROUTES.SIGNUP);
+  };
   return (
     <View style={styles.container}>
       <CustomBackButton />
