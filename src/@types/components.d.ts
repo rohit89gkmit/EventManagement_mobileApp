@@ -9,5 +9,10 @@ declare global {
     attendeeLimit: number;
     location: string;
   };
+  type customGenderIconProps = {
+    name: string;
+    gender: string;
+    setGender: Dispatch<SetStateAction<string>>;
+  };
 }
 export {};

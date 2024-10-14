@@ -18,6 +18,8 @@ declare global {
     age: number;
     username: string;
     password: string;
+    confirmpassword: string;
+    gender: string;
   };
   type customTabBarIconProps = {
     focused: boolean;

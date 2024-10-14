@@ -1,4 +1,4 @@
-import {Text, View, TextInput, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {styles} from './styles';
 import {ROUTES} from '@src/constants/routes';
@@ -12,6 +12,7 @@ import {
 import CustomBackButton from '@src/components/customBackButton';
 import CustomTextInput from '@src/components/CustomTextInput';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
+import CustomGenderIcon from '@src/components/customgendericon';
 
 const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const intialSignUpData = {
@@ -20,6 +21,8 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     age: 0,
     username: '',
     password: '',
+    confirmpassword: '',
+    gender: 'Male',
   };
   const initialErrorObj = {
     name: '',
@@ -27,10 +30,12 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     age: '',
     username: '',
     password: '',
+    confirmpassword: '',
   };
   const [signUpData, setSignUpData] =
     useState<signUpFormDataType>(intialSignUpData);
   const [error, setError] = useState(initialErrorObj);
+  const [gender, setGender] = useState<string>('Male');
 
   const validateSignUpForm = () => {
     const data = {...signUpData};
@@ -74,6 +79,10 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         'Password must be at least 6 characters and contain both letters and numbers';
       allTrue = false;
     }
+    if (data.confirmpassword !== data.password) {
+      errorObj.confirmpassword = 'Password do not matches';
+      allTrue = false;
+    }
     setError(prevError => {
       return {...errorObj};
     });
@@ -83,9 +92,9 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const handleSignUpClicked = () => {
     const isValidate = validateSignUpForm();
     if (isValidate) {
-      // const {saveSignupData, getLoginData} = useAsyncStorage();
-      // saveSignupData(signUpData);
-      // console.warn(getLoginData(signUpData.email, signUpData.password));
+      const {saveSignupData, getLoginData} = useAsyncStorage();
+      saveSignupData(signUpData);
+      console.warn(getLoginData(signUpData.email, signUpData.password));
       navigation.navigate(ROUTES.MAIN);
     }
   };
@@ -94,8 +103,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
       <CustomBackButton route={ROUTES.LOGIN} />
 
       <View style={styles.textContainer}>
-        <Text style={styles.headingText}>Let's get</Text>
-        <Text style={styles.headingText}>started</Text>
+        <Text style={styles.headingText}>Let's get started</Text>
       </View>
 
       <View style={styles.formContainer}>
@@ -139,14 +147,19 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
           <Text style={styles.errorTextMessage}>{error.username}</Text>
         )}
 
-        {/* <View
-          style={{
-            backgroundColor: 'red',
-            paddingVertical: 14,
-            borderRadius: 100,
-          }}>
-          <Text>hi</Text>
-        </View> */}
+        <View style={styles.genderContainer}>
+          <CustomGenderIcon name="male" gender={gender} setGender={setGender} />
+          <CustomGenderIcon
+            name="female"
+            gender={gender}
+            setGender={setGender}
+          />
+          <CustomGenderIcon
+            name="male-female"
+            gender={gender}
+            setGender={setGender}
+          />
+        </View>
 
         <CustomTextInput
           placeholder="Enter your password"
@@ -156,6 +169,15 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         />
         {error.password !== '' && (
           <Text style={styles.errorTextMessage}>{error.password}</Text>
+        )}
+        <CustomTextInput
+          placeholder="Confirm password"
+          secured={true}
+          iconName="envelope"
+          setData={setSignUpData}
+        />
+        {error.confirmpassword !== '' && (
+          <Text style={styles.errorTextMessage}>{error.confirmpassword}</Text>
         )}
 
         <TouchableOpacity
