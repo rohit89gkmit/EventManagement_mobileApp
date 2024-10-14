@@ -9,7 +9,8 @@ declare global {
     iconName: string;
     setData:
       | Dispatch<SetStateAction<loginFormDataType>>
-      | Dispatch<SetStateAction<signUpFormDataType>>;
+      | Dispatch<SetStateAction<signUpFormDataType>>
+      | Dispatch<SetStateAction<eventFormDataType>>;
   };
   type signUpFormDataType = {
     name: string;

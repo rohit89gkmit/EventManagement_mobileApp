@@ -21,9 +21,13 @@ const CustomTextInput = ({
 
   const handleFormChange = (text: string) => {
     const name = getNameOfInputField(placeholder);
-    setData((prevData: loginFormDataType) => {
-      return {...prevData, [name]: text};
-    });
+    setData(
+      (
+        prevData: loginFormDataType | signUpFormDataType | eventFormDataType,
+      ) => {
+        return {...prevData, [name]: text};
+      },
+    );
   };
 
   return (
