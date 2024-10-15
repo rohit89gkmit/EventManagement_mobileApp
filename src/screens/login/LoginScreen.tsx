@@ -58,7 +58,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         <CustomTextInput
           placeholder="Enter your email"
           secured={false}
-          iconName="envelope"
+          iconName="email-outline"
           setData={setLoginData}
         />
         {error.type === 'email' && (

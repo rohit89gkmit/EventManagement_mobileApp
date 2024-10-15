@@ -3,6 +3,10 @@ import {colors} from '@src/resources/colors';
 import {fonts} from '@src/resources/fonts';
 
 export const styles = StyleSheet.create({
+  label: {
+    marginLeft: 20,
+    fontSize: 16,
+  },
   inputContainer: {
     borderWidth: 1,
     borderColor: colors.secondary,
@@ -12,7 +16,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     marginVertical: 5,
-    marginBottom: 18,
+    marginBottom: 12,
   },
   textInput: {
     flex: 1,

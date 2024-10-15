@@ -10,8 +10,10 @@ import {
   passwordRegex,
 } from '@src/constants/constants';
 import CustomTextInput from '@src/components/CustomTextInput';
+import CustomBackButton from '@src/components/customBackButton';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import CustomGenderIcon from '@src/components/customgendericon';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const intialSignUpData = {
@@ -90,26 +92,25 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
 
   const handleSignUpClicked = () => {
     const isValidate = validateSignUpForm();
-    const {saveSignupData, getLoginData} = useAsyncStorage();
+    const {saveSignupData, getAllData} = useAsyncStorage();
     if (isValidate) {
       saveSignupData(signUpData);
-      console.warn(getLoginData(signUpData.email, signUpData.password));
       navigation.navigate(ROUTES.MAIN);
     }
   };
   return (
     <View style={styles.container}>
-      {/* <CustomBackButton route={ROUTES.LOGIN} />
+      <CustomBackButton route={ROUTES.LOGIN} />
 
-        <View style={styles.textContainer}>
-          <Text style={styles.headingText}>Let's get started</Text>
-        </View> */}
+      <View style={styles.textContainer}>
+        <Text style={styles.headingText}>Let's get started</Text>
+      </View>
 
       <View style={styles.formContainer}>
         <CustomTextInput
           placeholder="Enter your name"
           secured={false}
-          iconName="envelope"
+          iconName="account"
           setData={setSignUpData}
         />
         {error.name !== '' && (
@@ -119,7 +120,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         <CustomTextInput
           placeholder="Enter your email"
           secured={false}
-          iconName="envelope"
+          iconName="email-outline"
           setData={setSignUpData}
         />
         {error.email !== '' && (
@@ -139,13 +140,14 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         <CustomTextInput
           placeholder="Enter your username"
           secured={false}
-          iconName="envelope"
+          iconName="account"
           setData={setSignUpData}
         />
         {error.username !== '' && (
           <Text style={styles.errorTextMessage}>{error.username}</Text>
         )}
 
+        <Text style={styles.genderText}>Gender</Text>
         <View style={styles.genderContainer}>
           <CustomGenderIcon name="male" gender={gender} setGender={setGender} />
           <CustomGenderIcon
@@ -163,7 +165,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         <CustomTextInput
           placeholder="Enter your password"
           secured={true}
-          iconName="envelope"
+          iconName="lock"
           setData={setSignUpData}
         />
         {error.password !== '' && (
@@ -172,7 +174,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         <CustomTextInput
           placeholder="Confirm password"
           secured={true}
-          iconName="envelope"
+          iconName="lock"
           setData={setSignUpData}
         />
         {error.confirmpassword !== '' && (

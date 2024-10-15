@@ -2,9 +2,9 @@ import {TextInput, TouchableOpacity, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '@src/resources/colors';
 import {styles} from './styles';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 const CustomTextInput = ({
   placeholder,
   secured,
@@ -35,9 +35,13 @@ const CustomTextInput = ({
 
   return (
     <View>
-      <Text style={{marginLeft: 30, fontSize: 16}}>{capitalizedName}</Text>
+      <Text style={styles.label}>{capitalizedName}</Text>
       <View style={styles.inputContainer}>
-        <SimpleLineIcons name={iconName} size={22} color={colors.secondary} />
+        <MaterialCommunityIcons
+          name={iconName}
+          size={22}
+          color={colors.secondary}
+        />
         <TextInput
           style={styles.textInput}
           placeholder={placeholder}

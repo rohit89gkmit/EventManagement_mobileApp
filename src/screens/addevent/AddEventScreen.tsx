@@ -59,7 +59,6 @@ const AddEventScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text>AddEventScreen</Text>
       <View style={styles.formContainer}>
         <CustomTextInput
           placeholder="Enter event title"

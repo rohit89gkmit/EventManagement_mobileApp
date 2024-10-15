@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.SemiBold,
   },
   formContainer: {
-    marginTop: 20,
+    marginTop: 12,
   },
   loginButton: {
     backgroundColor: colors.primary,
@@ -60,5 +60,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    marginBottom: 12,
+    marginVertical: 5,
+  },
+  genderText: {
+    marginLeft: 20,
+    fontSize: 16,
   },
 });
