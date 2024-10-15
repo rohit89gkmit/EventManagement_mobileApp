@@ -4,6 +4,7 @@ const useAsyncStorage = () => {
   const saveSignupData = async (data: signUpFormDataType) => {
     const storageKey = `${data.email}+${data.password}`;
     try {
+      data = {...data, eventList: []};
       const jsonData = JSON.stringify(data);
       await AsyncStorage.setItem(storageKey, jsonData);
       await AsyncStorage.setItem('currentStorageKey', storageKey);
@@ -52,14 +53,18 @@ const useAsyncStorage = () => {
 
       const jsonData = await AsyncStorage.getItem(currentStorageKey);
       const userData = JSON.parse(jsonData as string);
+      console.warn(userData.email, userData.eventList.length);
+      const currentEventList = userData.eventList;
+      const updatedEventList = [...currentEventList, ...newEventList];
       const updatedUserData = {
         ...userData,
-        eventList: newEventList,
+        eventList: updatedEventList,
       };
       await AsyncStorage.setItem(
         currentStorageKey,
         JSON.stringify(updatedUserData),
       );
+      console.warn('updated');
     } catch (error) {
       console.error('Error adding eventList to current user:', error);
     }

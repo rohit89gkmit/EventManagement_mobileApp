@@ -3,15 +3,6 @@ declare global {
     email: string;
     password: string;
   };
-  type customTextInputProps = {
-    placeholder: string;
-    secured: boolean;
-    iconName: string;
-    setData:
-      | Dispatch<SetStateAction<loginFormDataType>>
-      | Dispatch<SetStateAction<signUpFormDataType>>
-      | Dispatch<SetStateAction<eventFormDataType>>;
-  };
   type signUpFormDataType = {
     name: string;
     email: string;
@@ -20,12 +11,7 @@ declare global {
     password: string;
     confirmpassword: string;
     gender: string;
-    storageKey?: string;
-  };
-  type customTabBarIconProps = {
-    focused: boolean;
-    iconName: string;
-    index: number;
+    eventList?: eventFormDataType[];
   };
 }
 

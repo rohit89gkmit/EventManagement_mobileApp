@@ -1,69 +1,45 @@
-import {Text, View, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
 import {styles} from './styles';
-import {nameRegex, limitRegex} from '@src/constants/constants';
 import CustomTextInput from '@src/components/CustomTextInput';
+import EventContext from '@src/context/EventContext';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import CustomModal from '@src/components/customModal';
+import AttendeesList from '@src/components/attendeesList';
 const AddEventScreen = () => {
-  const intialSignUpData = {
-    title: '',
-    date: new Date(),
-    description: '',
-    limit: 0,
-    location: '',
-  };
-  const initialErrorObj = {
-    title: '',
-    limit: '',
-    location: '',
-  };
-  const [eventData, setEventData] =
-    useState<eventFormDataType>(intialSignUpData);
+  const {
+    error,
+    attendeesList,
+    disabled,
+    setEventData,
+    addEvent,
+    setVisible,
+    setAttendeeData,
+    setAddOrEditButton,
+    resetEventContext,
+  } = useContext(EventContext);
 
-  const [error, setError] = useState(initialErrorObj);
-  const validateFormData = () => {
-    const data = {...eventData};
-    const errorObj = initialErrorObj;
-    let allTrue = true;
-    if (!data.title) {
-      errorObj.title = 'Title is required';
-      allTrue = false;
-    } else if (!nameRegex.test(data.title)) {
-      errorObj.title = 'Title must contain only letters and spaces';
-      allTrue = false;
-    }
-    if (!data.limit) {
-      errorObj.limit = 'Limit is required';
-      allTrue = false;
-    } else if (data.limit < 0) {
-      errorObj.limit = 'Limit must be a positive integer';
-      allTrue = false;
-    } else if (!limitRegex.test(String(data.limit))) {
-      errorObj.limit = 'Limit must be between 2 and 100';
-      allTrue = false;
-    }
-    if (!data.location) {
-      errorObj.location = 'Location is required';
-      allTrue = false;
-    } else if (!nameRegex.test(data.location)) {
-      errorObj.location = 'Location must contain only letters and spaces';
-      allTrue = false;
-    }
-    setError(prevError => {
-      return {...errorObj};
+  const handleAddAttendeeClicked = () => {
+    setAttendeeData(() => {
+      return {name: '', email: ''};
     });
-    return allTrue;
+    setAddOrEditButton('Add');
+    if (!disabled) setVisible(true);
   };
+  useEffect(() => {
+    resetEventContext();
 
-  const handleAddEventClicked = () => {
-    const isValidateFormData = validateFormData();
-  };
+    return () => {
+      resetEventContext();
+    };
+  }, []);
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.formContainer}>
         <CustomTextInput
           placeholder="Enter event title"
           secured={false}
-          iconName="envelope"
+          iconName=""
           setData={setEventData}
         />
         {error.title !== '' && (
@@ -73,21 +49,20 @@ const AddEventScreen = () => {
         <CustomTextInput
           placeholder="Enter event date"
           secured={false}
-          iconName="envelope"
+          iconName=""
           setData={setEventData}
         />
-
         <CustomTextInput
           placeholder="Enter event description"
           secured={false}
-          iconName="envelope"
+          iconName=""
           setData={setEventData}
         />
 
         <CustomTextInput
           placeholder="Enter attendee limit"
           secured={false}
-          iconName="envelope"
+          iconName=""
           setData={setEventData}
         />
         {error.limit !== '' && (
@@ -97,20 +72,32 @@ const AddEventScreen = () => {
         <CustomTextInput
           placeholder="Enter event location"
           secured={false}
-          iconName="envelope"
+          iconName=""
           setData={setEventData}
         />
         {error.location !== '' && (
           <Text style={styles.errorTextMessage}>{error.location}</Text>
         )}
 
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={handleAddEventClicked}>
+        <TouchableOpacity style={styles.loginButton} onPress={addEvent}>
           <Text style={styles.loginText}>Add Event</Text>
         </TouchableOpacity>
+
+        <View style={styles.addAttendeesContainer}>
+          <Text style={styles.attendeesText}>Attendees:</Text>
+          <TouchableOpacity onPress={handleAddAttendeeClicked}>
+            <AntDesign
+              name="pluscircleo"
+              size={30}
+              color={disabled ? 'red' : 'green'}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text>{attendeesList?.length}</Text>
+        {attendeesList.length > 0 && <AttendeesList />}
+        <CustomModal />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

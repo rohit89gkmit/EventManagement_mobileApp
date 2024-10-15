@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   loginButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: 'black',
     borderRadius: 100,
     marginTop: 25,
     padding: 4,
@@ -27,4 +27,13 @@ export const styles = StyleSheet.create({
     color: 'red',
     marginLeft: 12,
   },
+  addAttendeesContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginVertical: 20,
+    marginLeft: 15,
+  },
+  attendeesText: {fontSize: 18},
 });
