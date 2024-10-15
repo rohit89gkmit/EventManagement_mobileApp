@@ -1,4 +1,4 @@
-import {TextInput, TouchableOpacity, View} from 'react-native';
+import {TextInput, TouchableOpacity, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '@src/resources/colors';
 import {styles} from './styles';
@@ -18,9 +18,10 @@ const CustomTextInput = ({
     while (str[i] != ' ') i--;
     return str.slice(i + 1);
   };
+  let name = getNameOfInputField(placeholder);
 
   const handleFormChange = (text: string) => {
-    const name = getNameOfInputField(placeholder);
+    if (placeholder === 'Confirm password') name = 'confirmpassword';
     setData(
       (
         prevData: loginFormDataType | signUpFormDataType | eventFormDataType,
@@ -29,33 +30,42 @@ const CustomTextInput = ({
       },
     );
   };
+  let capitalizedName = name[0].toUpperCase() + name.slice(1);
+  if (placeholder === 'Confirm password') capitalizedName = 'Confirm Password';
 
   return (
-    <View style={styles.inputContainer}>
-      <SimpleLineIcons name={iconName} size={22} color={colors.secondary} />
-      <TextInput
-        style={styles.textInput}
-        placeholder={placeholder}
-        placeholderTextColor={colors.secondary}
-        secureTextEntry={secured && secureEntery}
-        onChangeText={handleFormChange}
-      />
-      {secured && (
-        <TouchableOpacity
-          onPress={() => {
-            setSecureEntery(prev => !prev);
-          }}>
-          {!secureEntery ? (
-            <SimpleLineIcons name={'eye'} size={20} color={colors.secondary} />
-          ) : (
-            <Ionicons
-              name={'eye-off-outline'}
-              size={20}
-              color={colors.secondary}
-            />
-          )}
-        </TouchableOpacity>
-      )}
+    <View>
+      <Text style={{marginLeft: 30, fontSize: 16}}>{capitalizedName}</Text>
+      <View style={styles.inputContainer}>
+        <SimpleLineIcons name={iconName} size={22} color={colors.secondary} />
+        <TextInput
+          style={styles.textInput}
+          placeholder={placeholder}
+          placeholderTextColor={colors.secondary}
+          secureTextEntry={secured && secureEntery}
+          onChangeText={handleFormChange}
+        />
+        {secured && (
+          <TouchableOpacity
+            onPress={() => {
+              setSecureEntery(prev => !prev);
+            }}>
+            {!secureEntery ? (
+              <SimpleLineIcons
+                name={'eye'}
+                size={20}
+                color={colors.secondary}
+              />
+            ) : (
+              <Ionicons
+                name={'eye-off-outline'}
+                size={20}
+                color={colors.secondary}
+              />
+            )}
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };

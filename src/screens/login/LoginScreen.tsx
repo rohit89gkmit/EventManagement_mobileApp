@@ -50,12 +50,8 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   };
   return (
     <View style={styles.container}>
-      <CustomBackButton />
-
       <View style={styles.textContainer}>
-        <Text style={styles.headingText}>Hey,</Text>
-        <Text style={styles.headingText}>Welcome</Text>
-        <Text style={styles.headingText}>Back</Text>
+        <Text style={styles.headingText}>Hey, Welcome Back</Text>
       </View>
 
       <View style={styles.formContainer}>

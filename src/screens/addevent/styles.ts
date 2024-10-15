@@ -25,5 +25,6 @@ export const styles = StyleSheet.create({
   },
   errorTextMessage: {
     color: 'red',
+    marginLeft: 12,
   },
 });

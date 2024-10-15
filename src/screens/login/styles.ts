@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.SemiBold,
   },
   formContainer: {
-    marginTop: 20,
+    marginTop: 60,
   },
   forgotPasswordText: {
     textAlign: 'right',

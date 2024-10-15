@@ -78,10 +78,10 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         'Password must be at least 6 characters and contain both letters and numbers';
       allTrue = false;
     }
-    // if (data.confirmpassword !== data.password) {
-    //   errorObj.confirmpassword = 'Password do not matches';
-    //   allTrue = false;
-    // }
+    if (data.confirmpassword !== data.password) {
+      errorObj.confirmpassword = 'Password do not matches';
+      allTrue = false;
+    }
     setError(prevError => {
       return {...errorObj};
     });
