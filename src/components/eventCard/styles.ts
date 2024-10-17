@@ -3,6 +3,7 @@ import {colors} from '@src/resources/colors';
 
 export const styles = StyleSheet.create({
   cardContainer: {
+    marginTop: 20,
     height: 300,
     width: 260,
     borderRadius: 20,

@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     padding: 20,
+    marginBottom: 50,
   },
   formContainer: {
     marginTop: 20,

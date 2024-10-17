@@ -2,6 +2,8 @@ import {createContext, ReactNode, useState, useEffect} from 'react';
 import React from 'react';
 import {emailRegex, nameRegex, limitRegex} from '@src/constants/constants';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const {v4: uuidv4} = require('uuid');
 export const EventContext = createContext<eventContextType>({
   eventData: {
     title: '',
@@ -19,6 +21,7 @@ export const EventContext = createContext<eventContextType>({
     name: '',
     email: '',
   },
+  date: new Date(),
   eventList: [],
   attendeesList: [],
   disabled: true,
@@ -34,6 +37,8 @@ export const EventContext = createContext<eventContextType>({
   setVisible: () => {},
   setAddOrEditButton: () => {},
   resetEventContext: () => {},
+  editEventFromList: () => {},
+  setDate: () => {},
 });
 
 export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
@@ -64,6 +69,8 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [disabled, setdisabled] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [addOrEditButton, setAddOrEditButton] = useState<string>('Add');
+  const [date, setDate] = useState(new Date());
+
   const validateFormData = () => {
     const data = {...eventData};
     const errorObj = initialErrorObj;
@@ -101,23 +108,32 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
     return allTrue;
   };
 
-  let limit: number = eventData.limit;
   useEffect(() => {
-    limit = eventData.limit;
-    if (limit <= attendeesList.length) setdisabled(true);
-    else setdisabled(false);
+    if (eventData.limit > attendeesList.length) setdisabled(false);
+    else setdisabled(true);
   }, [eventData]);
 
-  const addEvent = () => {
+  const addEvent = (eventTitle: string) => {
     const isValidateFormData = validateFormData();
     if (isValidateFormData) {
-      const clonedEventData = {...eventData, attendees: attendeesList};
+      const clonedEventData = {
+        ...eventData,
+        attendees: attendeesList,
+        date: date,
+      };
       setEventList(prevEvents => {
         return [...prevEvents, clonedEventData];
       });
       const {addEventList} = useAsyncStorage();
       addEventList(eventList);
     }
+  };
+
+  const editEventFromList = (eventTitle: string) => {
+    let arr = [...eventList];
+    arr = arr.filter(({title}) => title === eventTitle);
+    setAddOrEditButton('Edit');
+    setEventData(arr[0]);
   };
 
   const addAttendee = (attendeeEmail: string) => {
@@ -131,14 +147,14 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return [...prevAttendee, attendeeData];
       });
     }
-    if (attendeesList.length + 1 >= Number(limit)) setdisabled(true);
+    if (attendeesList.length + 1 >= eventData.limit) setdisabled(true);
   };
 
   const removeAttendeeFromList = (attendeeEmail: string) => {
     let arr = [...attendeesList];
     arr = arr.filter(({email}) => email !== attendeeEmail);
+    if (eventData.limit > attendeesList.length) setdisabled(false);
     setattendeesList(arr);
-    setdisabled(false);
   };
   const editAttendeeFromList = (attendeeEmail: string) => {
     let arr = [...attendeesList];
@@ -155,6 +171,21 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setattendeesList([]);
   };
 
+  const getEventListFromAsyncStorage = async () => {
+    try {
+      const currentStorageKey = await AsyncStorage.getItem('currentStorageKey');
+      const jsonData = await AsyncStorage.getItem(currentStorageKey as string);
+      const userData = JSON.parse(jsonData as string);
+      const currentEventList = userData.eventList;
+      setEventList(currentEventList);
+    } catch (error) {
+      console.error('Error fetching event list from storage:', error);
+    }
+  };
+  useEffect(() => {
+    getEventListFromAsyncStorage();
+  }, []);
+
   return (
     <EventContext.Provider
       value={{
@@ -166,6 +197,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         attendeeData,
         visible,
         addOrEditButton,
+        date,
         setAttendeeData,
         validateFormData,
         addEvent,
@@ -176,6 +208,8 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setVisible,
         setAddOrEditButton,
         resetEventContext,
+        editEventFromList,
+        setDate,
       }}>
       {children}
     </EventContext.Provider>

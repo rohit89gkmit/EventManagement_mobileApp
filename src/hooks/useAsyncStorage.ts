@@ -25,6 +25,7 @@ const useAsyncStorage = () => {
       }
       return value;
     } catch (error) {
+      // console.error('not found');
       return false;
     }
   };
@@ -54,8 +55,7 @@ const useAsyncStorage = () => {
       const jsonData = await AsyncStorage.getItem(currentStorageKey);
       const userData = JSON.parse(jsonData as string);
       console.warn(userData.email, userData.eventList.length);
-      const currentEventList = userData.eventList;
-      const updatedEventList = [...currentEventList, ...newEventList];
+      const updatedEventList = [...newEventList];
       const updatedUserData = {
         ...userData,
         eventList: updatedEventList,
@@ -64,7 +64,7 @@ const useAsyncStorage = () => {
         currentStorageKey,
         JSON.stringify(updatedUserData),
       );
-      console.warn('updated');
+      console.warn('updated', updatedUserData.name);
     } catch (error) {
       console.error('Error adding eventList to current user:', error);
     }

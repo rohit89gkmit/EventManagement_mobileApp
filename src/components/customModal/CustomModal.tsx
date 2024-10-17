@@ -5,7 +5,7 @@ import CustomTextInput from '../CustomTextInput';
 import EventContext from '@src/context/EventContext';
 import {styles} from './styles';
 import {emailRegex, nameRegex} from '@src/constants/constants';
-
+import Entypo from 'react-native-vector-icons/Entypo';
 const CustomModal = () => {
   const {
     visible,
@@ -44,13 +44,13 @@ const CustomModal = () => {
   };
 
   const handleAddAttendeeClicked = () => {
-    setError(prevError => {
-      return {name: '', email: ''};
-    });
     const isValidateAttendee = validateAttendeeData();
     if (isValidateAttendee) {
       addAttendee(attendeeData.email);
       setVisible(false);
+      setError(prevError => {
+        return {name: '', email: ''};
+      });
     }
   };
 
@@ -68,8 +68,20 @@ const CustomModal = () => {
             styles.modalView,
             {height: screenHeight / 2 - 80, width: screenWidth},
           ]}>
-          <Button title="close modal" onPress={handleCloseModal} />
-
+          <TouchableOpacity
+            onPress={handleCloseModal}
+            style={{
+              height: 40,
+              width: 40,
+              borderRadius: 20,
+              backgroundColor: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 300,
+            }}>
+            <Text>X</Text>
+          </TouchableOpacity>
           <View style={styles.formContainer}>
             <CustomTextInput
               placeholder="Enter name"

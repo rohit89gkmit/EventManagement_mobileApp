@@ -6,4 +6,6 @@ export const ROUTES = {
   ADDEVENT: 'ADDEVENT',
   EVENTLIST: 'EVENTLIST',
   PROFILE: 'PROFILE',
+  EVENTLISTSTACKSCREEN: 'EVENTLISTSTACKSCREEN',
 } as const;
+type RouteKeys = keyof typeof ROUTES;

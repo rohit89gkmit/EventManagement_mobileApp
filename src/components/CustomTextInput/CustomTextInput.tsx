@@ -10,6 +10,7 @@ const CustomTextInput = ({
   secured,
   iconName,
   setData,
+  value,
 }: customTextInputProps) => {
   const [secureEntery, setSecureEntery] = useState<boolean>(true);
 
@@ -24,7 +25,11 @@ const CustomTextInput = ({
     if (placeholder === 'Confirm password') name = 'confirmpassword';
     setData(
       (
-        prevData: loginFormDataType | signUpFormDataType | eventFormDataType,
+        prevData:
+          | loginFormDataType
+          | signUpFormDataType
+          | eventFormDataType
+          | attendeeFormType,
       ) => {
         return {...prevData, [name]: text};
       },
@@ -37,17 +42,20 @@ const CustomTextInput = ({
     <View>
       <Text style={styles.label}>{capitalizedName}</Text>
       <View style={styles.inputContainer}>
-        <MaterialCommunityIcons
-          name={iconName}
-          size={22}
-          color={colors.secondary}
-        />
+        {iconName !== '' && (
+          <MaterialCommunityIcons
+            name={iconName}
+            size={22}
+            color={colors.secondary}
+          />
+        )}
         <TextInput
           style={styles.textInput}
           placeholder={placeholder}
           placeholderTextColor={colors.secondary}
           secureTextEntry={secured && secureEntery}
           onChangeText={handleFormChange}
+          value={value as string}
         />
         {secured && (
           <TouchableOpacity

@@ -9,6 +9,7 @@ import {
   ProfileScreen,
 } from '@src/screens';
 import CustomTabBarIcon from '@src/components/customTabBarIcon';
+import EventListStackNavigator from './EventListStackNavigator';
 
 const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
@@ -39,17 +40,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={ROUTES.ADDEVENT}
-        component={AddEventScreen}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <CustomTabBarIcon focused={focused} iconName="plus" index={2} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name={ROUTES.EVENTLIST}
-        component={EventListScreen}
+        name={ROUTES.EVENTLISTSTACKSCREEN}
+        component={EventListStackNavigator}
         options={{
           tabBarIcon: ({focused}) => (
             <CustomTabBarIcon focused={focused} iconName="apps" index={3} />

@@ -7,9 +7,10 @@ declare global {
     attendeesList: attendeeFormType[];
     disabled: boolean;
     visible: boolean;
+    date: Date;
     addOrEditButton: string;
     validateFormData: () => void;
-    addEvent: () => void;
+    addEvent: (title: string) => void;
     removeAttendeeFromList: (email: string) => void;
     editAttendeeFromList: (email: string) => void;
     addAttendee: (attendeeEmail: string) => void;
@@ -18,6 +19,8 @@ declare global {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setAddOrEditButton: React.Dispatch<React.SetStateAction<string>>;
     resetEventContext: () => void;
+    editEventFromList: (eventTitle: string) => void;
+    setDate: React.Dispatch<React.SetStateAction<Date>>;
   };
 }
 export {};

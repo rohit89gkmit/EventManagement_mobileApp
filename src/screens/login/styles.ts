@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   loginButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: 'black',
     borderRadius: 100,
     marginTop: 20,
     padding: 4,

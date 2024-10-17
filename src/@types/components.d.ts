@@ -48,5 +48,10 @@ declare global {
     name: string;
     email: string;
   };
+  type eventCardProps = {
+    title: string;
+    limit: number;
+    location: string;
+  };
 }
 export {};

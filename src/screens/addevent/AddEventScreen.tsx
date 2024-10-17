@@ -1,23 +1,30 @@
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
+import {Text, View, TouchableOpacity, ScrollView, Button} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import DatePicker from 'react-native-date-picker';
 import {styles} from './styles';
 import CustomTextInput from '@src/components/CustomTextInput';
 import EventContext from '@src/context/EventContext';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CustomModal from '@src/components/customModal';
 import AttendeesList from '@src/components/attendeesList';
+import {colors} from '@src/resources/colors';
 const AddEventScreen = () => {
   const {
     error,
     attendeesList,
     disabled,
+    eventData,
+    date,
     setEventData,
     addEvent,
     setVisible,
     setAttendeeData,
     setAddOrEditButton,
     resetEventContext,
+    setDate,
   } = useContext(EventContext);
+
+  const [open, setOpen] = useState(false);
 
   const handleAddAttendeeClicked = () => {
     setAttendeeData(() => {
@@ -46,11 +53,31 @@ const AddEventScreen = () => {
           <Text style={styles.errorTextMessage}>{error.title}</Text>
         )}
 
-        <CustomTextInput
-          placeholder="Enter event date"
-          secured={false}
-          iconName=""
-          setData={setEventData}
+        <Text style={{marginLeft: 20, fontSize: 16, marginBottom: 5}}>
+          Date
+        </Text>
+        <TouchableOpacity
+          onPress={() => setOpen(true)}
+          style={{
+            borderWidth: 1,
+            borderColor: colors.secondary,
+            borderRadius: 50,
+            padding: 12,
+            marginBottom: 10,
+          }}>
+          <Text style={{marginLeft: 15, color: 'black'}}>{`${date}`}</Text>
+        </TouchableOpacity>
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          onConfirm={date => {
+            setOpen(false);
+            setDate(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
         />
         <CustomTextInput
           placeholder="Enter event description"
@@ -79,7 +106,9 @@ const AddEventScreen = () => {
           <Text style={styles.errorTextMessage}>{error.location}</Text>
         )}
 
-        <TouchableOpacity style={styles.loginButton} onPress={addEvent}>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => addEvent(eventData.title)}>
           <Text style={styles.loginText}>Add Event</Text>
         </TouchableOpacity>
 
@@ -93,7 +122,7 @@ const AddEventScreen = () => {
             />
           </TouchableOpacity>
         </View>
-        <Text>{attendeesList?.length}</Text>
+        <Text>Number of Attendees added {attendeesList?.length}</Text>
         {attendeesList.length > 0 && <AttendeesList />}
         <CustomModal />
       </View>
