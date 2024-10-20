@@ -5,14 +5,14 @@ import AttendeeCard from '@src/components/attendeeCard';
 
 const AttendeesList = () => {
   const {attendeesList} = useContext(EventContext);
+  console.log('attendee list in attwnddeeList screen is', attendeesList);
   return (
     <View>
-      <FlatList
-        data={attendeesList}
-        renderItem={({item}) => (
-          <AttendeeCard email={item.email} name={item.name} />
-        )}
-      />
+      {attendeesList.map(item => {
+        return (
+          <AttendeeCard key={item.email} email={item.email} name={item.name} />
+        );
+      })}
     </View>
   );
 };

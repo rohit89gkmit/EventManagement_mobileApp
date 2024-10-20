@@ -1,11 +1,10 @@
-import {Button, Text, Dimensions, TouchableOpacity, View} from 'react-native';
+import {Text, Dimensions, TouchableOpacity, View} from 'react-native';
 import {Modal} from 'react-native';
 import React, {useContext, useState} from 'react';
 import CustomTextInput from '../CustomTextInput';
 import EventContext from '@src/context/EventContext';
 import {styles} from './styles';
 import {emailRegex, nameRegex} from '@src/constants/constants';
-import Entypo from 'react-native-vector-icons/Entypo';
 const CustomModal = () => {
   const {
     visible,

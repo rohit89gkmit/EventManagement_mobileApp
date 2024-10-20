@@ -6,7 +6,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     padding: 20,
-    marginBottom: 50,
   },
   formContainer: {
     marginTop: 20,
@@ -16,6 +15,7 @@ export const styles = StyleSheet.create({
     borderRadius: 100,
     marginTop: 25,
     padding: 4,
+    marginBottom: 160,
   },
   loginText: {
     color: colors.white,

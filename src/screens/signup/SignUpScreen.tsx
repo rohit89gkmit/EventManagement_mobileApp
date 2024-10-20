@@ -1,4 +1,4 @@
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import {styles} from './styles';
 import {ROUTES} from '@src/constants/routes';
@@ -13,7 +13,6 @@ import CustomTextInput from '@src/components/CustomTextInput';
 import CustomBackButton from '@src/components/customBackButton';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import CustomGenderIcon from '@src/components/customgendericon';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const intialSignUpData = {
@@ -92,14 +91,14 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
 
   const handleSignUpClicked = () => {
     const isValidate = validateSignUpForm();
-    const {saveSignupData, getAllData} = useAsyncStorage();
+    const {saveSignupData} = useAsyncStorage();
     if (isValidate) {
       saveSignupData(signUpData);
       navigation.navigate(ROUTES.MAIN);
     }
   };
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <CustomBackButton route={ROUTES.LOGIN} />
 
       <View style={styles.textContainer}>
@@ -193,7 +192,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -15,12 +15,12 @@ const AddEventScreen = () => {
     disabled,
     eventData,
     date,
+    addOrEditEvent,
     setEventData,
     addEvent,
     setVisible,
     setAttendeeData,
     setAddOrEditButton,
-    resetEventContext,
     setDate,
   } = useContext(EventContext);
 
@@ -33,26 +33,20 @@ const AddEventScreen = () => {
     setAddOrEditButton('Add');
     if (!disabled) setVisible(true);
   };
-  useEffect(() => {
-    resetEventContext();
 
-    return () => {
-      resetEventContext();
-    };
-  }, []);
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.formContainer}>
         <CustomTextInput
           placeholder="Enter event title"
           secured={false}
           iconName=""
           setData={setEventData}
+          value={eventData.title}
         />
         {error.title !== '' && (
           <Text style={styles.errorTextMessage}>{error.title}</Text>
         )}
-
         <Text style={{marginLeft: 20, fontSize: 16, marginBottom: 5}}>
           Date
         </Text>
@@ -84,34 +78,28 @@ const AddEventScreen = () => {
           secured={false}
           iconName=""
           setData={setEventData}
+          value={eventData.description}
         />
-
         <CustomTextInput
           placeholder="Enter attendee limit"
           secured={false}
           iconName=""
           setData={setEventData}
+          value={eventData.limit}
         />
         {error.limit !== '' && (
           <Text style={styles.errorTextMessage}>{error.limit}</Text>
         )}
-
         <CustomTextInput
           placeholder="Enter event location"
           secured={false}
           iconName=""
           setData={setEventData}
+          value={eventData.location}
         />
         {error.location !== '' && (
           <Text style={styles.errorTextMessage}>{error.location}</Text>
         )}
-
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => addEvent(eventData.title)}>
-          <Text style={styles.loginText}>Add Event</Text>
-        </TouchableOpacity>
-
         <View style={styles.addAttendeesContainer}>
           <Text style={styles.attendeesText}>Attendees:</Text>
           <TouchableOpacity onPress={handleAddAttendeeClicked}>
@@ -123,11 +111,18 @@ const AddEventScreen = () => {
           </TouchableOpacity>
         </View>
         <Text>Number of Attendees added {attendeesList?.length}</Text>
-        {attendeesList.length > 0 && <AttendeesList />}
+        <AttendeesList />
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => addEvent(eventData.id)}>
+          <Text style={styles.loginText}>
+            {addOrEditEvent === 'Add' ? 'Add Event' : 'Save changes'}
+          </Text>
+        </TouchableOpacity>
         <CustomModal />
       </View>
     </ScrollView>
   );
 };
 
-export default AddEventScreen;
+export default React.memo(AddEventScreen);

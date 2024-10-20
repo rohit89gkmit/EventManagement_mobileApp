@@ -8,6 +8,7 @@ const useAsyncStorage = () => {
       const jsonData = JSON.stringify(data);
       await AsyncStorage.setItem(storageKey, jsonData);
       await AsyncStorage.setItem('currentStorageKey', storageKey);
+      console.log('the current storage key is ', storageKey);
     } catch (error) {
       console.error('Error saving signup data to AsyncStorage:', error);
     }
@@ -15,17 +16,15 @@ const useAsyncStorage = () => {
 
   const getLoginData = async (email: string, password: string) => {
     const storageKey = `${email}+${password}`;
+    console.log('current useer after login is', storageKey);
     try {
+      await AsyncStorage.setItem('currentStorageKey', storageKey);
       const jsonData = await AsyncStorage.getItem(storageKey);
       const parsedData: signUpFormDataType = JSON.parse(jsonData as string);
-      let value = true;
-      if (!parsedData.email) value = false;
-      if (value) {
-        await AsyncStorage.setItem('currentStorageKey', storageKey);
-      }
-      return value;
+      console.log(parsedData);
+      return parsedData;
     } catch (error) {
-      // console.error('not found');
+      console.warn('Emailpassword are worong');
       return false;
     }
   };
@@ -56,6 +55,8 @@ const useAsyncStorage = () => {
       const userData = JSON.parse(jsonData as string);
       console.warn(userData.email, userData.eventList.length);
       const updatedEventList = [...newEventList];
+      console.log('eventlist to add in storage', updatedEventList.length);
+      console.log(updatedEventList.length);
       const updatedUserData = {
         ...userData,
         eventList: updatedEventList,
@@ -64,7 +65,9 @@ const useAsyncStorage = () => {
         currentStorageKey,
         JSON.stringify(updatedUserData),
       );
-      console.warn('updated', updatedUserData.name);
+      const jsonData2 = await AsyncStorage.getItem(currentStorageKey);
+      const userData2 = JSON.parse(jsonData2 as string);
+      console.warn('updated', userData2.eventList.length);
     } catch (error) {
       console.error('Error adding eventList to current user:', error);
     }

@@ -28,12 +28,13 @@ declare global {
     location: string;
   };
   type eventFormDataType = {
+    id: number;
     title: string;
     date: Date;
     description: string;
     limit: number;
     location: string;
-    attendeeList?: attendeeFormType[];
+    attendees: attendeeFormType[];
   };
   type customGenderIconProps = {
     name: string;
@@ -52,6 +53,14 @@ declare global {
     title: string;
     limit: number;
     location: string;
+    date: Date;
+    id: number;
+    attendees: attendeeFormType[];
+    confirmStatus: Dispatch<SetStateAction<string>>;
   };
+  type searchBarProps = {
+    onChange: Dispatch<SetStateAction<string>>;
+  };
+  type sortingPreference = date | attendee | alphabetically;
 }
 export {};

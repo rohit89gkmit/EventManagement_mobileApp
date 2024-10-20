@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalView: {
-    backgroundColor: colors.gray,
+    backgroundColor: '#dad7cd',
     borderRadius: 50,
     padding: 20,
     alignItems: 'center',

@@ -3,6 +3,11 @@ declare global {
     email: string;
     password: string;
   };
+  type settingtype = {
+    filterPreference: string;
+    sortPreference: string;
+    hoursFormat: boolean;
+  };
   type signUpFormDataType = {
     name: string;
     email: string;
@@ -12,6 +17,7 @@ declare global {
     confirmpassword: string;
     gender: string;
     eventList?: eventFormDataType[];
+    settings?: settingType;
   };
 }
 

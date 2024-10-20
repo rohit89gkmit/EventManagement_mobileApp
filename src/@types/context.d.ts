@@ -9,8 +9,12 @@ declare global {
     visible: boolean;
     date: Date;
     addOrEditButton: string;
+    addOrEditEvent: string;
+    modalVisible: boolean;
+    confirmationText: string;
+    confirm: string;
     validateFormData: () => void;
-    addEvent: (title: string) => void;
+    addEvent: (eventId: number) => void;
     removeAttendeeFromList: (email: string) => void;
     editAttendeeFromList: (email: string) => void;
     addAttendee: (attendeeEmail: string) => void;
@@ -18,9 +22,16 @@ declare global {
     setAttendeeData: React.Dispatch<React.SetStateAction<attendeeFormType>>;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setAddOrEditButton: React.Dispatch<React.SetStateAction<string>>;
-    resetEventContext: () => void;
-    editEventFromList: (eventTitle: string) => void;
+    editEventFromList: (eventId: number) => void;
     setDate: React.Dispatch<React.SetStateAction<Date>>;
+    setAddOrEditEvent: React.Dispatch<React.SetStateAction<string>>;
+    setEventList: React.Dispatch<React.SetStateAction<eventFormDataType[]>>;
+    setattendeesList: React.Dispatch<React.SetStateAction<attendeeFormType[]>>;
+    setdisabled: React.Dispatch<React.SetStateAction<boolean>>;
+    removeEventFromList: (eventId: number) => void;
+    setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    setConfirmationText: React.Dispatch<React.SetStateAction<string>>;
+    setConfirm: React.Dispatch<React.SetStateAction<string>>;
   };
 }
 export {};

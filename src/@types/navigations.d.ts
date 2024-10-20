@@ -11,12 +11,17 @@ declare global {
   type BottomTabParamList = {
     DASHBOARD: undefined;
     EVENTLISTSTACKSCREEN: undefined;
-    PROFILE: undefined;
+    PROFILESTACKSCREEN: undefined;
   };
 
   type EventListStackParamList = {
     EVENTLIST: undefined;
     ADDEVENT: undefined;
+  };
+
+  type SettingStackParamList = {
+    PROFILE: undefined;
+    SETTING: undefined;
   };
 
   type LoginScreenProps = NativeStackScreenProps<
@@ -48,8 +53,16 @@ declare global {
     BottomTabParamList,
     ROUTES.EVENTLISTSTACKSCREEN
   >;
-  type ProfileScreenProps = BottomTabScreenProps<
+  type ProfileStackScreenProps = BottomTabScreenProps<
     BottomTabParamList,
+    ROUTES.PROFILESTACKSCREEN
+  >;
+  type SettingScreenProps = NativeStackScreenProps<
+    SettingStackParamList,
+    ROUTES.SETTING
+  >;
+  type ProfileScreenProps = NativeStackScreenProps<
+    SettingStackParamList,
     ROUTES.PROFILE
   >;
 }

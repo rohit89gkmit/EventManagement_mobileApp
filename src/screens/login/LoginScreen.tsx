@@ -1,12 +1,14 @@
 import {Text, View, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import CustomTextInput from '@src/components/CustomTextInput';
 import CustomBackButton from '@src/components/customBackButton';
 import {styles} from './styles';
 import {emailRegex} from '@src/constants/constants';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import {ROUTES} from '@src/constants/routes';
+import EventContext from '@src/context/EventContext';
 const LoginScreen = ({navigation}: LoginScreenProps) => {
+  const {setEventList, eventList} = useContext(EventContext);
   const [loginData, setLoginData] = useState<loginFormDataType>({
     email: '',
     password: '',
@@ -35,6 +37,12 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       const {getLoginData} = useAsyncStorage();
       getLoginData(loginData.email, loginData.password).then(value => {
         if (value) {
+          // console.log('eventlists is ', value.eventList);
+          if (value.eventList) {
+            // console.log('heyyyy');
+            setEventList(value.eventList);
+            // console.log(eventList);
+          }
           navigation.navigate(ROUTES.MAIN);
         } else {
           setError({
@@ -45,6 +53,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       });
     }
   };
+
   const handleSignUpPress = () => {
     navigation.navigate(ROUTES.SIGNUP);
   };

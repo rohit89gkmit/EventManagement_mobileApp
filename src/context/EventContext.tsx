@@ -1,16 +1,17 @@
 import {createContext, ReactNode, useState, useEffect} from 'react';
 import React from 'react';
-import {emailRegex, nameRegex, limitRegex} from '@src/constants/constants';
+import {nameRegex, limitRegex} from '@src/constants/constants';
 import useAsyncStorage from '@src/hooks/useAsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const {v4: uuidv4} = require('uuid');
 export const EventContext = createContext<eventContextType>({
   eventData: {
+    id: Date.now(),
     title: '',
     date: new Date(),
     description: '',
     limit: 0,
     location: '',
+    attendees: [],
   },
   error: {
     title: '',
@@ -27,6 +28,10 @@ export const EventContext = createContext<eventContextType>({
   disabled: true,
   visible: false,
   addOrEditButton: 'Add',
+  addOrEditEvent: 'Add',
+  modalVisible: false,
+  confirmationText: '',
+  confirm: 'No',
   setAttendeeData: () => {},
   validateFormData: () => {},
   addEvent: () => {},
@@ -36,18 +41,27 @@ export const EventContext = createContext<eventContextType>({
   setEventData: () => {},
   setVisible: () => {},
   setAddOrEditButton: () => {},
-  resetEventContext: () => {},
   editEventFromList: () => {},
   setDate: () => {},
+  setAddOrEditEvent: () => {},
+  setEventList: () => {},
+  setattendeesList: () => {},
+  setdisabled: () => {},
+  removeEventFromList: () => {},
+  setModalVisible: () => {},
+  setConfirmationText: () => {},
+  setConfirm: () => {},
 });
 
 export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const intialEventData = {
+    id: Date.now(),
     title: '',
     date: new Date(),
     description: '',
     limit: 0,
     location: '',
+    attendees: [],
   };
   const initialAttendeeData = {
     name: '',
@@ -69,8 +83,13 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [disabled, setdisabled] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [addOrEditButton, setAddOrEditButton] = useState<string>('Add');
+  const [addOrEditEvent, setAddOrEditEvent] = useState<string>('Add');
   const [date, setDate] = useState(new Date());
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [confirmationText, setConfirmationText] = useState<string>('');
+  const [confirm, setConfirm] = useState<string>('No');
 
+  // console.log('eventdata in context', eventData);
   const validateFormData = () => {
     const data = {...eventData};
     const errorObj = initialErrorObj;
@@ -94,6 +113,9 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
     } else if (attendeesList.length > eventData.limit) {
       errorObj.limit = 'Number of attendees are greater than limit';
       allTrue = false;
+    } else if (attendeesList.length === 0) {
+      errorObj.limit = 'Please add atleast one attendee';
+      allTrue = false;
     }
     if (!data.location) {
       errorObj.location = 'Location is required';
@@ -108,12 +130,15 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
     return allTrue;
   };
 
+  let limit: number = eventData?.limit || 0;
+
   useEffect(() => {
-    if (eventData.limit > attendeesList.length) setdisabled(false);
+    limit = eventData.limit;
+    if (limit > attendeesList.length) setdisabled(false);
     else setdisabled(true);
   }, [eventData]);
 
-  const addEvent = (eventTitle: string) => {
+  const addEvent = (eventId: number) => {
     const isValidateFormData = validateFormData();
     if (isValidateFormData) {
       const clonedEventData = {
@@ -121,19 +146,43 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         attendees: attendeesList,
         date: date,
       };
-      setEventList(prevEvents => {
-        return [...prevEvents, clonedEventData];
-      });
+      let arr = [...eventList];
+      const index = arr.findIndex(({id}) => id === eventId);
+      if (index !== -1) {
+        arr[index] = clonedEventData;
+        setEventList(() => [...arr]);
+      } else {
+        arr = [...eventList, clonedEventData];
+        setEventList(prevEvents => {
+          return [...prevEvents, clonedEventData];
+        });
+      }
       const {addEventList} = useAsyncStorage();
-      addEventList(eventList);
+      addEventList(arr);
     }
   };
 
-  const editEventFromList = (eventTitle: string) => {
+  const editEventFromList = (eventId: number) => {
+    const selectedEvent = eventList.find(({id}) => id === eventId);
+    if (selectedEvent) {
+      setAddOrEditEvent('Edit');
+
+      if (selectedEvent.attendees) {
+        const updatedAttendees = [...selectedEvent.attendees];
+        setattendeesList(updatedAttendees);
+        const isDisabled =
+          Number(selectedEvent.limit) <= updatedAttendees.length;
+        setdisabled(isDisabled);
+      }
+      setEventData(selectedEvent);
+    }
+  };
+  const removeEventFromList = (eventId: number) => {
     let arr = [...eventList];
-    arr = arr.filter(({title}) => title === eventTitle);
-    setAddOrEditButton('Edit');
-    setEventData(arr[0]);
+    arr = arr.filter(({id}) => id !== eventId);
+    setEventList(arr);
+    const {addEventList} = useAsyncStorage();
+    addEventList(arr);
   };
 
   const addAttendee = (attendeeEmail: string) => {
@@ -147,7 +196,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return [...prevAttendee, attendeeData];
       });
     }
-    if (attendeesList.length + 1 >= eventData.limit) setdisabled(true);
+    if (attendeesList.length + 1 >= Number(limit)) setdisabled(true);
   };
 
   const removeAttendeeFromList = (attendeeEmail: string) => {
@@ -164,14 +213,8 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setAttendeeData(arr[0]);
   };
 
-  const resetEventContext = () => {
-    setVisible(false);
-    setdisabled(true);
-    setAttendeeData(initialAttendeeData);
-    setattendeesList([]);
-  };
-
   const getEventListFromAsyncStorage = async () => {
+    console.log('setting eventLisrt from storagee');
     try {
       const currentStorageKey = await AsyncStorage.getItem('currentStorageKey');
       const jsonData = await AsyncStorage.getItem(currentStorageKey as string);
@@ -198,6 +241,10 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         visible,
         addOrEditButton,
         date,
+        addOrEditEvent,
+        modalVisible,
+        confirmationText,
+        confirm,
         setAttendeeData,
         validateFormData,
         addEvent,
@@ -207,9 +254,16 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setEventData,
         setVisible,
         setAddOrEditButton,
-        resetEventContext,
         editEventFromList,
         setDate,
+        setAddOrEditEvent,
+        setEventList,
+        setattendeesList,
+        setdisabled,
+        removeEventFromList,
+        setModalVisible,
+        setConfirmationText,
+        setConfirm,
       }}>
       {children}
     </EventContext.Provider>

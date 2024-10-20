@@ -4,6 +4,7 @@ import {fonts} from '@src/resources/fonts';
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: 'white',
     flex: 1,
   },
   textContainer: {
