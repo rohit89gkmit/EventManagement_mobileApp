@@ -17,6 +17,8 @@ const EventCard = ({
   id,
   attendees,
   confirmStatus,
+  date,
+  setConfirmStatus,
 }: eventCardProps) => {
   const {editEventFromList, removeEventFromList, setModalVisible} =
     useContext(EventContext);
@@ -31,9 +33,27 @@ const EventCard = ({
     setModalVisible(true);
   };
 
+  function formatDateString(dateString: any) {
+    const options = {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    };
+    const date = new Date(dateString);
+
+    // Format the date
+    return date
+      .toLocaleDateString('en-US', options)
+      .replace(', ', ' ')
+      .replace(/\d+/, match => match.trim());
+  }
+  const newDate = formatDateString(date);
+
   useEffect(() => {
     if (confirmStatus === 'Yes') {
+      console.log('eventdeleted with id', id);
       removeEventFromList(id);
+      setConfirmStatus('No');
     }
   }, [confirmStatus]);
 
@@ -46,7 +66,7 @@ const EventCard = ({
           <View style={styles.viewContainer}>
             <Entypo name="calendar" size={16} color="black" />
             <View style={[styles.valueContainer, {marginLeft: 3}]}>
-              <Text>Saturday 12 October</Text>
+              <Text>{newDate}</Text>
             </View>
           </View>
 

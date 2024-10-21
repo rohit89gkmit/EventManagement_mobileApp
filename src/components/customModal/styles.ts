@@ -5,9 +5,11 @@ export const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    backgroundColor: '#dad7cd',
+    backgroundColor: 'white',
     borderRadius: 50,
     padding: 20,
     alignItems: 'center',
@@ -50,5 +52,15 @@ export const styles = StyleSheet.create({
   errorTextMessage: {
     color: 'red',
     marginLeft: 12,
+  },
+  closeButton: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: colors.gray,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 300,
   },
 });

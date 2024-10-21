@@ -94,7 +94,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     const {saveSignupData} = useAsyncStorage();
     if (isValidate) {
       saveSignupData(signUpData);
-      navigation.navigate(ROUTES.MAIN);
+      navigation.navigate(ROUTES.LOGIN);
     }
   };
   return (
@@ -129,7 +129,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
         <CustomTextInput
           placeholder="Enter your age"
           secured={false}
-          iconName="envelope"
+          iconName="account"
           setData={setSignUpData}
         />
         {error.age !== '' && (

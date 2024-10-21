@@ -2,9 +2,11 @@ import {Text, Dimensions, TouchableOpacity, View} from 'react-native';
 import {Modal} from 'react-native';
 import React, {useContext, useState} from 'react';
 import CustomTextInput from '../CustomTextInput';
+import Entypo from 'react-native-vector-icons/Entypo';
 import EventContext from '@src/context/EventContext';
 import {styles} from './styles';
 import {emailRegex, nameRegex} from '@src/constants/constants';
+import {colors} from '@src/resources/colors';
 const CustomModal = () => {
   const {
     visible,
@@ -65,21 +67,19 @@ const CustomModal = () => {
         <View
           style={[
             styles.modalView,
-            {height: screenHeight / 2 - 80, width: screenWidth},
+            {
+              height: screenHeight / 2 - 80,
+              width: screenWidth,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+            },
           ]}>
           <TouchableOpacity
             onPress={handleCloseModal}
-            style={{
-              height: 40,
-              width: 40,
-              borderRadius: 20,
-              backgroundColor: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: 300,
-            }}>
-            <Text>X</Text>
+            style={styles.closeButton}>
+            <Entypo name="cross" size={24} />
           </TouchableOpacity>
           <View style={styles.formContainer}>
             <CustomTextInput

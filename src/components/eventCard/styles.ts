@@ -12,6 +12,11 @@ export const styles = StyleSheet.create({
     display: 'flex',
     gap: 5,
     paddingHorizontal: 15,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    backgroundColor: 'white',
   },
   headingText: {
     marginVertical: 5,

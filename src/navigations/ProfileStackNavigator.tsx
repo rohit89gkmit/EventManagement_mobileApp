@@ -1,4 +1,3 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ROUTES} from '@src/constants/routes';
@@ -18,5 +17,3 @@ const ProfileStackNavigator = () => {
 };
 
 export default ProfileStackNavigator;
-
-const styles = StyleSheet.create({});

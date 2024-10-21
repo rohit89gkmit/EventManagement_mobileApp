@@ -1,5 +1,5 @@
 import {Text, TouchableOpacity, View} from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,7 +8,7 @@ import {styles} from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ROUTES} from '@src/constants/routes';
 import EventContext from '@src/context/EventContext';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import ConfirmationModal from '@src/components/confirmationmodal/ConfirmationModal';
 const ProfileScreen = () => {
   const {setModalVisible} = useContext(EventContext);
@@ -23,37 +23,40 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     const func = async () => {
-      await AsyncStorage.setItem('currentStorageKey', '');
+      await AsyncStorage.setItem('currentStorageKey', ''); //remove
     };
     if (confirmStatus === 'Yes') {
       func();
-      navigation.navigate(ROUTES.LOGIN);
+      navigation.navigate(ROUTES.LOGIN); //replace use
     }
   }, [confirmStatus]);
 
-  useEffect(() => {
-    const userData = async () => {
-      try {
-        const currentStorageKey = await AsyncStorage.getItem(
-          'currentStorageKey',
-        );
-        if (currentStorageKey) {
-          const jsonData = await AsyncStorage.getItem(currentStorageKey);
-          if (jsonData) {
-            const parsedData = JSON.parse(jsonData);
-            if (parsedData?.email) {
-              setData(parsedData);
-              console.log('success: ', parsedData.name, parsedData.email);
+  useFocusEffect(
+    useCallback(() => {
+      const userData = async () => {
+        try {
+          const currentStorageKey = await AsyncStorage.getItem(
+            'currentStorageKey',
+          );
+          console.log('storage key is', currentStorageKey);
+          if (currentStorageKey) {
+            const jsonData = await AsyncStorage.getItem(currentStorageKey);
+            if (jsonData) {
+              const parsedData = JSON.parse(jsonData);
+              if (parsedData?.email) {
+                setData(parsedData);
+                console.log('success: ', parsedData.name, parsedData.email);
+              }
             }
           }
+        } catch (error) {
+          console.error('Error retrieving user data:', error);
         }
-      } catch (error) {
-        console.error('Error retrieving user data:', error);
-      }
-    };
+      };
 
-    userData();
-  }, []);
+      userData();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>

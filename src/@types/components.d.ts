@@ -56,7 +56,8 @@ declare global {
     date: Date;
     id: number;
     attendees: attendeeFormType[];
-    confirmStatus: Dispatch<SetStateAction<string>>;
+    confirmStatus: string;
+    setConfirmStatus: Dispatch<SetStateAction<string>>;
   };
   type searchBarProps = {
     onChange: Dispatch<SetStateAction<string>>;

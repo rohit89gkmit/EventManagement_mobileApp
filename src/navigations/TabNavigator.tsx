@@ -1,13 +1,7 @@
-import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {ROUTES} from '@src/constants/routes';
-import {
-  AddEventScreen,
-  DashBoardScreen,
-  EventListScreen,
-  ProfileScreen,
-} from '@src/screens';
+import {DashBoardScreen} from '@src/screens';
 import CustomTabBarIcon from '@src/components/customTabBarIcon';
 import EventListStackNavigator from './EventListStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
@@ -67,5 +61,3 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
-
-const styles = StyleSheet.create({});

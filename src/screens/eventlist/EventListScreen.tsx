@@ -5,8 +5,10 @@ import {
   View,
   Text,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import moment from 'moment';
 import {styles} from './styles';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import EventContext from '@src/context/EventContext';
 import EventCard from '@src/components/eventCard';
 import {ROUTES} from '@src/constants/routes';
@@ -14,64 +16,85 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import SearchBar from '@src/components/searchbar';
 import useDebounce from '@src/hooks/useDebounce';
 import ConfirmationModal from '@src/components/confirmationmodal/ConfirmationModal';
-import {colors} from '@src/resources/colors';
 import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const EventListscreen = ({navigation}: EventListScreenProps) => {
-  const {
-    eventList,
-    setEventList,
-    setEventData,
-    setAddOrEditEvent,
-    setattendeesList,
-  } = useContext(EventContext);
+  const {eventList, setEventData, setAddOrEditEvent, setattendeesList} =
+    useContext(EventContext);
 
   const [query, setQuery] = useState<string>('');
   const debounceValue = useDebounce(query, 2000);
   const [loading, setLoading] = useState<boolean>(false);
   const [duplicateEventlist, setDuplicateEventList] =
     useState<eventFormDataType[]>(eventList);
-  const [originalEventList, setOriginalEventList] =
-    useState<eventFormDataType[]>(eventList);
 
   const [confirmStatus, setConfirmStatus] = useState<string>('');
   const [filter, setFilter] = useState<string>('Today');
   const [sort, setSort] = useState<string>('Date & Time');
-  const [preference, setPreference] = useState<string>('alphabetically');
-
-  useEffect(() => {
-    setOriginalEventList(eventList);
-    setDuplicateEventList(eventList);
-  }, [eventList]);
 
   useEffect(() => {
     setLoading(true);
-    const filteredList = originalEventList.filter(event =>
+    const searchFilteredList = eventList.filter(event =>
       event.title.toLowerCase().includes(debounceValue.toLowerCase()),
     );
-    const sortedList = sortEvents(filteredList, preference);
-    console.log('sorted list is', sortedList);
+    console.log('searchedList is', searchFilteredList.length);
+    const filteredList = applyFilter(searchFilteredList, filter);
+    const sortedList = sortEvents(filteredList, sort);
+
     setTimeout(() => {
       setDuplicateEventList(sortedList);
       setLoading(false);
     }, 1000);
-  }, [debounceValue, preference]);
+  }, [debounceValue, filter, sort, eventList]);
 
-  const sortEvents = (
-    events: eventFormDataType[],
-    {preference}: sortingPreference,
-  ) => {
+  const applyFilter = (events: eventFormDataType[], filter: string) => {
+    const today = moment().startOf('day');
+    const weekStart = moment().startOf('isoWeek');
+    const monthStart = moment().startOf('month');
+
+    console.log('Applying filter:', filter);
+    console.log(
+      'Events before filtering:',
+      events.map(event => event.date),
+    );
+
+    switch (filter) {
+      case 'Today':
+        return events.filter(event =>
+          moment(event.date).local().isSame(today, 'day'),
+        );
+      case 'Weekly':
+        return events.filter(event =>
+          moment(event.date)
+            .local()
+            .isBetween(weekStart, moment(), 'day', '[]'),
+        );
+      case 'Monthly':
+        return events.filter(event =>
+          moment(event.date).isBetween(
+            monthStart,
+            moment().endOf('month'),
+            'day',
+            '[]',
+          ),
+        );
+      default:
+        return events;
+    }
+  };
+
+  const sortEvents = (events: eventFormDataType[], preference: string) => {
     const sortedList = [...events];
     switch (preference) {
-      case 'date':
+      case 'Date & Time':
         sortedList.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
         );
         break;
-      case 'attendees':
+      case 'Attendee Count':
         sortedList.sort((a, b) => a.attendees.length - b.attendees.length);
         break;
-      case 'alphabetically':
+      case 'Alphabetically':
         sortedList.sort((a, b) => a.title.localeCompare(b.title));
         break;
       default:
@@ -106,59 +129,42 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
     setattendeesList([]);
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const currentStorageKey = await AsyncStorage.getItem(
-          'currentStorageKey',
-        );
-        console.log('current user is ', currentStorageKey);
-        const jsonData = await AsyncStorage.getItem(
-          currentStorageKey as string,
-        );
-        const userData = JSON.parse(jsonData as string);
-        console.log('userdata in settings', userData);
-        if (userData.settings) {
-          const {filterPreference, sortPreference, hoursFormat} =
-            userData.settings;
-          setFilter(filterPreference);
-          setSort(sortPreference);
-          console.log('hiiiiiii');
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        try {
+          const currentStorageKey = await AsyncStorage.getItem(
+            'currentStorageKey',
+          );
+          console.log('current user is ', currentStorageKey);
+          const jsonData = await AsyncStorage.getItem(
+            currentStorageKey as string,
+          );
+          const userData = JSON.parse(jsonData as string);
+          if (userData.settings) {
+            const {filterPreference, sortPreference, hoursFormat} =
+              userData.settings;
+            setFilter(filterPreference);
+            setSort(sortPreference);
+          }
+        } catch (error) {
+          console.error('error in settingsss');
         }
-      } catch (error) {
-        console.error('error in settingsss');
-      }
-    };
-    getData();
-  }, []);
+      };
+
+      getData();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 20, fontWeight: '500', marginTop: 10}}>
-        Events
-      </Text>
+      <Text style={styles.eventHeading}>Events</Text>
       <SearchBar onChange={setQuery} />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          gap: 70,
-          marginTop: 15,
-        }}>
+      <View style={styles.filterSortView}>
         <View>
-          <Text style={{fontSize: 16, fontWeight: '400', marginLeft: 13}}>
-            Filter by
-          </Text>
-          <View
-            style={{
-              width: 130,
-              borderRadius: 30,
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderColor: colors.secondary,
-              padding: 10,
-            }}>
+          <Text style={styles.sortFilterText}>Filter by</Text>
+          <View style={styles.filterView}>
             <Dropdown
               selectedTextStyle={styles.selectedTextStyle}
               iconStyle={styles.iconStyle}
@@ -175,18 +181,8 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
         </View>
 
         <View>
-          <Text style={{fontSize: 16, fontWeight: '400', marginLeft: 13}}>
-            Sort by
-          </Text>
-          <View
-            style={{
-              width: 160,
-              borderRadius: 30,
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderColor: colors.secondary,
-              padding: 10,
-            }}>
+          <Text style={styles.sortFilterText}>Sort by</Text>
+          <View style={styles.sortView}>
             <Dropdown
               selectedTextStyle={styles.selectedTextStyle}
               iconStyle={styles.iconStyle}
@@ -207,7 +203,7 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
         <View style={styles.loaderConatiner}>
           <ActivityIndicator size={'large'} color={'black'} />
         </View>
-      ) : (
+      ) : duplicateEventlist.length > 0 ? (
         <FlatList
           style={{marginBottom: 150}}
           showsVerticalScrollIndicator={false}
@@ -221,9 +217,14 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
               id={item.id}
               attendees={item.attendees}
               confirmStatus={confirmStatus}
+              setConfirmStatus={setConfirmStatus}
             />
           )}
         />
+      ) : (
+        <Text style={{fontSize: 18, marginTop: 20, fontWeight: '500'}}>
+          No Events
+        </Text>
       )}
       <TouchableOpacity
         onPress={handleAddEventClicked}

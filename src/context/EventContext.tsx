@@ -139,6 +139,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
   }, [eventData]);
 
   const addEvent = (eventId: number) => {
+    console.log('called evntData');
     const isValidateFormData = validateFormData();
     if (isValidateFormData) {
       const clonedEventData = {
@@ -148,6 +149,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
       };
       let arr = [...eventList];
       const index = arr.findIndex(({id}) => id === eventId);
+      console.log(index, 'index is prev');
       if (index !== -1) {
         arr[index] = clonedEventData;
         setEventList(() => [...arr]);
@@ -158,7 +160,9 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
         });
       }
       const {addEventList} = useAsyncStorage();
+      console.log('setting in storage');
       addEventList(arr);
+      console.log('success');
     }
   };
 

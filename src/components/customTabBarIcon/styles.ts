@@ -10,6 +10,6 @@ export const styles = (focused: boolean, index: number) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginLeft: index === 1 ? -22 : index === 4 ? 22 : 0,
+      marginLeft: index === 1 ? -50 : index === 4 ? 50 : 0,
     },
   });

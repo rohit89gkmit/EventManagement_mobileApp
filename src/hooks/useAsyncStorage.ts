@@ -7,8 +7,6 @@ const useAsyncStorage = () => {
       data = {...data, eventList: []};
       const jsonData = JSON.stringify(data);
       await AsyncStorage.setItem(storageKey, jsonData);
-      await AsyncStorage.setItem('currentStorageKey', storageKey);
-      console.log('the current storage key is ', storageKey);
     } catch (error) {
       console.error('Error saving signup data to AsyncStorage:', error);
     }
@@ -18,28 +16,13 @@ const useAsyncStorage = () => {
     const storageKey = `${email}+${password}`;
     console.log('current useer after login is', storageKey);
     try {
-      await AsyncStorage.setItem('currentStorageKey', storageKey);
       const jsonData = await AsyncStorage.getItem(storageKey);
       const parsedData: signUpFormDataType = JSON.parse(jsonData as string);
-      console.log(parsedData);
+      await AsyncStorage.setItem('currentStorageKey', storageKey);
       return parsedData;
     } catch (error) {
-      console.warn('Emailpassword are worong');
+      console.warn('Email or password are wrong');
       return false;
-    }
-  };
-
-  const getAllData = async () => {
-    try {
-      const allKeys = await AsyncStorage.getAllKeys();
-      const allItems = await AsyncStorage.multiGet(allKeys);
-      const userList = allItems.map(([key, value]) =>
-        JSON.parse(value as string),
-      );
-      return userList;
-    } catch (error) {
-      console.error('Error getting all data from AsyncStorage:', error);
-      return [];
     }
   };
 
@@ -53,10 +36,7 @@ const useAsyncStorage = () => {
 
       const jsonData = await AsyncStorage.getItem(currentStorageKey);
       const userData = JSON.parse(jsonData as string);
-      console.warn(userData.email, userData.eventList.length);
       const updatedEventList = [...newEventList];
-      console.log('eventlist to add in storage', updatedEventList.length);
-      console.log(updatedEventList.length);
       const updatedUserData = {
         ...userData,
         eventList: updatedEventList,
@@ -65,28 +45,15 @@ const useAsyncStorage = () => {
         currentStorageKey,
         JSON.stringify(updatedUserData),
       );
-      const jsonData2 = await AsyncStorage.getItem(currentStorageKey);
-      const userData2 = JSON.parse(jsonData2 as string);
-      console.warn('updated', userData2.eventList.length);
     } catch (error) {
       console.error('Error adding eventList to current user:', error);
-    }
-  };
-
-  const clearCurrentStorageKey = async () => {
-    try {
-      await AsyncStorage.removeItem('currentStorageKey');
-    } catch (error) {
-      console.error('Error clearing currentStorageKey:', error);
     }
   };
 
   return {
     saveSignupData,
     getLoginData,
-    getAllData,
     addEventList,
-    clearCurrentStorageKey,
   };
 };
 

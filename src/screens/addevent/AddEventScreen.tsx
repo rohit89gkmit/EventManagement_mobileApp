@@ -1,5 +1,5 @@
 import {Text, View, TouchableOpacity, ScrollView, Button} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import DatePicker from 'react-native-date-picker';
 import {styles} from './styles';
 import CustomTextInput from '@src/components/CustomTextInput';
@@ -8,7 +8,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import CustomModal from '@src/components/customModal';
 import AttendeesList from '@src/components/attendeesList';
 import {colors} from '@src/resources/colors';
-const AddEventScreen = () => {
+import {ROUTES} from '@src/constants/routes';
+const AddEventScreen = ({navigation}: AddEventScreenProps) => {
   const {
     error,
     attendeesList,
@@ -25,6 +26,26 @@ const AddEventScreen = () => {
   } = useContext(EventContext);
 
   const [open, setOpen] = useState(false);
+  function formatDateTimeString(dateString: any) {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    const date = new Date(dateString);
+
+    const formattedDate = date
+      .toLocaleDateString('en-US', options)
+      .replace(',', '');
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`;
+
+    return `${formattedDate} ${formattedTime}`;
+  }
+  const newDate = formatDateTimeString(date);
 
   const handleAddAttendeeClicked = () => {
     setAttendeeData(() => {
@@ -59,7 +80,7 @@ const AddEventScreen = () => {
             padding: 12,
             marginBottom: 10,
           }}>
-          <Text style={{marginLeft: 15, color: 'black'}}>{`${date}`}</Text>
+          <Text style={{marginLeft: 15, color: 'black'}}>{`${newDate}`}</Text>
         </TouchableOpacity>
         <DatePicker
           modal
@@ -102,7 +123,9 @@ const AddEventScreen = () => {
         )}
         <View style={styles.addAttendeesContainer}>
           <Text style={styles.attendeesText}>Attendees:</Text>
-          <TouchableOpacity onPress={handleAddAttendeeClicked}>
+          <TouchableOpacity
+            disabled={disabled}
+            onPress={handleAddAttendeeClicked}>
             <AntDesign
               name="pluscircleo"
               size={30}
@@ -110,11 +133,16 @@ const AddEventScreen = () => {
             />
           </TouchableOpacity>
         </View>
-        <Text>Number of Attendees added {attendeesList?.length}</Text>
+        <Text style={{marginLeft: 12}}>
+          Number of Attendees added {attendeesList?.length}
+        </Text>
         <AttendeesList />
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => addEvent(eventData.id)}>
+          onPress={() => {
+            addEvent(eventData.id);
+            navigation.navigate(ROUTES.EVENTLIST);
+          }}>
           <Text style={styles.loginText}>
             {addOrEditEvent === 'Add' ? 'Add Event' : 'Save changes'}
           </Text>
