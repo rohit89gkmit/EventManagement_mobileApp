@@ -1,12 +1,14 @@
+// TabNavigator.js
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, {useState} from 'react';
 import {ROUTES} from '@src/constants/routes';
 import {DashBoardScreen} from '@src/screens';
 import CustomTabBarIcon from '@src/components/customTabBarIcon';
 import EventListStackNavigator from './EventListStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<BottomTabParamList>();
+
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -32,6 +34,9 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <CustomTabBarIcon focused={focused} iconName="home" index={1} />
           ),
+          headerShown: true,
+          headerTitle: 'Dashboard',
+          headerTitleStyle: {fontSize: 20},
         }}
       />
       <Tab.Screen
@@ -45,7 +50,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name={ROUTES.PROFILESTACKSCREEN}
-        component={ProfileStackNavigator}
+        children={() => <ProfileStackNavigator />}
         options={{
           tabBarIcon: ({focused}) => (
             <CustomTabBarIcon

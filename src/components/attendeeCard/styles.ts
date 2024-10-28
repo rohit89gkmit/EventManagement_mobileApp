@@ -6,9 +6,9 @@ export const styles = StyleSheet.create({
     marginTop: 12,
   },
   containerView: {
-    width: 370,
+    width: 350,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'gray',
     borderRadius: 10,
     padding: 10,
     paddingVertical: 15,
@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   editRemoveContainer: {
     display: 'flex',

@@ -43,7 +43,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         } else {
           setError({
             type: 'password',
-            message: 'Email or password are incorrect',
+            message: 'Email or password is incorrect',
           });
         }
       });

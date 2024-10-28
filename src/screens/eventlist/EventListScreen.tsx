@@ -18,9 +18,15 @@ import useDebounce from '@src/hooks/useDebounce';
 import ConfirmationModal from '@src/components/confirmationmodal/ConfirmationModal';
 import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const EventListscreen = ({navigation}: EventListScreenProps) => {
-  const {eventList, setEventData, setAddOrEditEvent, setattendeesList} =
-    useContext(EventContext);
+  const {
+    eventList,
+    setEventData,
+    setAddOrEditEvent,
+    setDate,
+    setattendeesList,
+  } = useContext(EventContext);
 
   const [query, setQuery] = useState<string>('');
   const debounceValue = useDebounce(query, 2000);
@@ -78,6 +84,8 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
             '[]',
           ),
         );
+      case 'All':
+        return events;
       default:
         return events;
     }
@@ -107,6 +115,7 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
     {label: 'Today', value: 'Today'},
     {label: 'Weekly', value: 'Weekly'},
     {label: 'Monthly', value: 'Monthly'},
+    {label: 'All', value: 'All'},
   ];
   const sortData = [
     {label: 'Date & Time', value: 'Date & Time'},
@@ -116,7 +125,7 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
 
   const handleAddEventClicked = () => {
     setAddOrEditEvent('Add');
-    navigation.navigate(ROUTES.ADDEVENT);
+    setDate(new Date());
     setEventData({
       id: Date.now(),
       title: '',
@@ -127,6 +136,7 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
       attendees: [],
     });
     setattendeesList([]);
+    navigation.navigate(ROUTES.ADDEVENT);
   };
 
   useFocusEffect(
@@ -158,7 +168,6 @@ const EventListscreen = ({navigation}: EventListScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.eventHeading}>Events</Text>
       <SearchBar onChange={setQuery} />
 
       <View style={styles.filterSortView}>

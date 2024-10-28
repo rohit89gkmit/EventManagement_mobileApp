@@ -1,4 +1,11 @@
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
 import React, {useState} from 'react';
 import {styles} from './styles';
 import {ROUTES} from '@src/constants/routes';
@@ -37,6 +44,20 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const [error, setError] = useState(initialErrorObj);
   const [gender, setGender] = useState<string>('Male');
 
+  const isUserNameExists = (currUserName: string) => {
+    const {getAllUserNames} = useAsyncStorage();
+    getAllUserNames().then(data => {
+      return data.some(({username}) => username === currUserName);
+    });
+  };
+
+  const isExistsEmail = (currEmail: string) => {
+    const {getAllEmails} = useAsyncStorage();
+    getAllEmails().then(data => {
+      return data.some(({email}) => email === currEmail);
+    });
+  };
+
   const validateSignUpForm = () => {
     const data = {...signUpData};
     const errorObj = initialErrorObj;
@@ -56,6 +77,10 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
       errorObj.email = 'Invalid Email format';
       allTrue = false;
     }
+    if (isExistsEmail(data.email)) {
+      errorObj.email = 'Email already exists';
+      allTrue = false;
+    }
     if (!data.age || data.age <= 0) {
       errorObj.age = 'Age is required';
       allTrue = false;
@@ -66,9 +91,15 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     if (!data.username) {
       errorObj.username = 'Username is required';
       allTrue = false;
-    } else if (!usernameRegex.test(data.username)) {
+    }
+    if (!usernameRegex.test(data.username)) {
       errorObj.username =
         'Username can only contain letters, numbers, or underscores';
+      allTrue = false;
+    }
+    if (isUserNameExists(data.username)) {
+      console.log('sss');
+      errorObj.username = 'Username already exists';
       allTrue = false;
     }
     if (!data.password) {
@@ -98,101 +129,109 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     }
   };
   return (
-    <ScrollView style={styles.container}>
-      <CustomBackButton route={ROUTES.LOGIN} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <ScrollView style={styles.container}>
+        <CustomBackButton route={ROUTES.LOGIN} />
 
-      <View style={styles.textContainer}>
-        <Text style={styles.headingText}>Let's get started</Text>
-      </View>
-
-      <View style={styles.formContainer}>
-        <CustomTextInput
-          placeholder="Enter your name"
-          secured={false}
-          iconName="account"
-          setData={setSignUpData}
-        />
-        {error.name !== '' && (
-          <Text style={styles.errorTextMessage}>{error.name}</Text>
-        )}
-
-        <CustomTextInput
-          placeholder="Enter your email"
-          secured={false}
-          iconName="email-outline"
-          setData={setSignUpData}
-        />
-        {error.email !== '' && (
-          <Text style={styles.errorTextMessage}>{error.email}</Text>
-        )}
-
-        <CustomTextInput
-          placeholder="Enter your age"
-          secured={false}
-          iconName="account"
-          setData={setSignUpData}
-        />
-        {error.age !== '' && (
-          <Text style={styles.errorTextMessage}>{error.age}</Text>
-        )}
-
-        <CustomTextInput
-          placeholder="Enter your username"
-          secured={false}
-          iconName="account"
-          setData={setSignUpData}
-        />
-        {error.username !== '' && (
-          <Text style={styles.errorTextMessage}>{error.username}</Text>
-        )}
-
-        <Text style={styles.genderText}>Gender</Text>
-        <View style={styles.genderContainer}>
-          <CustomGenderIcon name="male" gender={gender} setGender={setGender} />
-          <CustomGenderIcon
-            name="female"
-            gender={gender}
-            setGender={setGender}
-          />
-          <CustomGenderIcon
-            name="male-female"
-            gender={gender}
-            setGender={setGender}
-          />
+        <View style={styles.textContainer}>
+          <Text style={styles.headingText}>Let's get started</Text>
         </View>
 
-        <CustomTextInput
-          placeholder="Enter your password"
-          secured={true}
-          iconName="lock"
-          setData={setSignUpData}
-        />
-        {error.password !== '' && (
-          <Text style={styles.errorTextMessage}>{error.password}</Text>
-        )}
-        <CustomTextInput
-          placeholder="Confirm password"
-          secured={true}
-          iconName="lock"
-          setData={setSignUpData}
-        />
-        {error.confirmpassword !== '' && (
-          <Text style={styles.errorTextMessage}>{error.confirmpassword}</Text>
-        )}
+        <View style={styles.formContainer}>
+          <CustomTextInput
+            placeholder="Enter your name"
+            secured={false}
+            iconName="account"
+            setData={setSignUpData}
+          />
+          {error.name !== '' && (
+            <Text style={styles.errorTextMessage}>{error.name}</Text>
+          )}
 
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={handleSignUpClicked}>
-          <Text style={styles.loginText}>Sign up</Text>
-        </TouchableOpacity>
-        <View style={styles.footerContainer}>
-          <Text style={styles.accountText}>Already have an account!</Text>
-          <TouchableOpacity>
-            <Text style={styles.signupText}>Login</Text>
+          <CustomTextInput
+            placeholder="Enter your email"
+            secured={false}
+            iconName="email-outline"
+            setData={setSignUpData}
+          />
+          {error.email !== '' && (
+            <Text style={styles.errorTextMessage}>{error.email}</Text>
+          )}
+
+          <CustomTextInput
+            placeholder="Enter your age"
+            secured={false}
+            iconName="account"
+            setData={setSignUpData}
+          />
+          {error.age !== '' && (
+            <Text style={styles.errorTextMessage}>{error.age}</Text>
+          )}
+
+          <CustomTextInput
+            placeholder="Enter your username"
+            secured={false}
+            iconName="account"
+            setData={setSignUpData}
+          />
+          {error.username !== '' && (
+            <Text style={styles.errorTextMessage}>{error.username}</Text>
+          )}
+
+          <Text style={styles.genderText}>Gender</Text>
+          <View style={styles.genderContainer}>
+            <CustomGenderIcon
+              name="male"
+              gender={gender}
+              setGender={setGender}
+            />
+            <CustomGenderIcon
+              name="female"
+              gender={gender}
+              setGender={setGender}
+            />
+            <CustomGenderIcon
+              name="male-female"
+              gender={gender}
+              setGender={setGender}
+            />
+          </View>
+
+          <CustomTextInput
+            placeholder="Enter your password"
+            secured={true}
+            iconName="lock"
+            setData={setSignUpData}
+          />
+          {error.password !== '' && (
+            <Text style={styles.errorTextMessage}>{error.password}</Text>
+          )}
+          <CustomTextInput
+            placeholder="Confirm password"
+            secured={true}
+            iconName="lock"
+            setData={setSignUpData}
+          />
+          {error.confirmpassword !== '' && (
+            <Text style={styles.errorTextMessage}>{error.confirmpassword}</Text>
+          )}
+
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={handleSignUpClicked}>
+            <Text style={styles.loginText}>Sign up</Text>
           </TouchableOpacity>
+          <View style={styles.footerContainer}>
+            <Text style={styles.accountText}>Already have an account!</Text>
+            <TouchableOpacity>
+              <Text style={styles.signupText}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

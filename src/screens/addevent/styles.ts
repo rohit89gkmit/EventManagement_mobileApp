@@ -26,7 +26,8 @@ export const styles = StyleSheet.create({
   },
   errorTextMessage: {
     color: 'red',
-    marginLeft: 12,
+    marginLeft: 22,
+    marginTop: -10,
   },
   addAttendeesContainer: {
     display: 'flex',

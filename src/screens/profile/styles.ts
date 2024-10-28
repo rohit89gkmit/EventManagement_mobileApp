@@ -45,4 +45,12 @@ export const styles = StyleSheet.create({
   },
   iconName: {flexDirection: 'row', gap: 10, alignItems: 'center'},
   text: {fontWeight: '500'},
+  backButton: {
+    height: 40,
+    width: 40,
+    backgroundColor: colors.gray,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

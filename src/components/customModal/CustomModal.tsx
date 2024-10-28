@@ -1,17 +1,27 @@
-import {Text, Dimensions, TouchableOpacity, View} from 'react-native';
+import {
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  View,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {Modal} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import CustomTextInput from '../CustomTextInput';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EventContext from '@src/context/EventContext';
 import {styles} from './styles';
+import {useFocusEffect} from '@react-navigation/native';
 import {emailRegex, nameRegex} from '@src/constants/constants';
-import {colors} from '@src/resources/colors';
+import useAsyncStorage from '@src/hooks/useAsyncStorage';
 const CustomModal = () => {
   const {
     visible,
     addOrEditButton,
     attendeeData,
+    attendeesList,
     addAttendee,
     setAttendeeData,
     setVisible,
@@ -38,6 +48,7 @@ const CustomModal = () => {
       errorObj.email = 'Invalid Email format';
       allTrue = false;
     }
+
     setError(prevError => {
       return {...errorObj};
     });
@@ -63,12 +74,14 @@ const CustomModal = () => {
   const {height: screenHeight, width: screenWidth} = Dimensions.get('window');
   return (
     <Modal visible={visible} transparent={true} animationType="slide">
-      <View style={styles.centeredView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.centeredView}>
         <View
           style={[
             styles.modalView,
             {
-              height: screenHeight / 2 - 80,
+              height: screenHeight / 2 - 120,
               width: screenWidth,
               shadowColor: '#000',
               shadowOffset: {width: 0, height: 2},
@@ -81,7 +94,8 @@ const CustomModal = () => {
             style={styles.closeButton}>
             <Entypo name="cross" size={24} />
           </TouchableOpacity>
-          <View style={styles.formContainer}>
+
+          <ScrollView contentContainerStyle={styles.formContainer}>
             <CustomTextInput
               placeholder="Enter name"
               secured={false}
@@ -92,6 +106,7 @@ const CustomModal = () => {
             {error.name !== '' && (
               <Text style={styles.errorTextMessage}>{error.name}</Text>
             )}
+
             <CustomTextInput
               placeholder="Enter email"
               secured={false}
@@ -110,9 +125,9 @@ const CustomModal = () => {
                 {addOrEditButton === 'Add' ? 'Add attendee' : 'Save changes'}
               </Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

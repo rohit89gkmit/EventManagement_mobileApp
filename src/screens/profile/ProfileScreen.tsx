@@ -60,15 +60,6 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.profileSetting}>
-        <View></View>
-        <Text style={styles.profileText}>Profile</Text>
-        <TouchableOpacity
-          style={styles.settings}
-          onPress={() => navigation.navigate(ROUTES.SETTING)}>
-          <Ionicons name="settings-outline" size={24} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
       <View style={styles.profileImage}>
         <Text style={{fontSize: 52, color: 'white'}}>
           {data?.name[0].toUpperCase()}
@@ -83,11 +74,11 @@ const ProfileScreen = () => {
             size={26}
             color={colors.secondary}
           />
-          <Text style={styles.text}>{data?.name}</Text>
+          <Text style={styles.text}>{data?.username}</Text>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather name="edit" size={22} color={colors.secondary} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>
@@ -95,9 +86,37 @@ const ProfileScreen = () => {
           <Feather name="mail" size={26} color={colors.secondary} />
           <Text style={styles.text}>{data?.email}</Text>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather name="edit" size={22} color={colors.secondary} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+      </View>
+
+      <View style={styles.detailsContainer}>
+        <View style={styles.iconName}>
+          <MaterialCommunityIcons
+            name="account"
+            size={26}
+            color={colors.secondary}
+          />
+          <Text style={styles.text}>{data?.age}</Text>
+        </View>
+        {/* <TouchableOpacity>
+          <Feather name="edit" size={22} color={colors.secondary} />
+        </TouchableOpacity> */}
+      </View>
+
+      <View style={styles.detailsContainer}>
+        <View style={styles.iconName}>
+          <MaterialCommunityIcons
+            name="gender-male-female-variant"
+            size={26}
+            color={colors.secondary}
+          />
+          <Text style={styles.text}>{data?.gender}</Text>
+        </View>
+        {/* <TouchableOpacity>
+          <Feather name="edit" size={22} color={colors.secondary} />
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>
@@ -109,9 +128,9 @@ const ProfileScreen = () => {
           />
           <Text style={styles.text}>***********</Text>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather name="edit" size={22} color={colors.secondary} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <TouchableOpacity

@@ -9,7 +9,6 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthNavigator = () => {
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
-
   useEffect(() => {
     const checkStorageKey = async () => {
       const currentStorageKey = await AsyncStorage.getItem('currentStorageKey');

@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   modalView: {
     backgroundColor: 'white',
     borderRadius: 50,
-    padding: 20,
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -62,5 +62,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 300,
+    marginTop: 15,
   },
 });

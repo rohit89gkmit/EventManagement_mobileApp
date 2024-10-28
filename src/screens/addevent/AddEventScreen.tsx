@@ -1,5 +1,5 @@
 import {Text, View, TouchableOpacity, ScrollView, Button} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import DatePicker from 'react-native-date-picker';
 import {styles} from './styles';
 import CustomTextInput from '@src/components/CustomTextInput';
@@ -26,6 +26,7 @@ const AddEventScreen = ({navigation}: AddEventScreenProps) => {
   } = useContext(EventContext);
 
   const [open, setOpen] = useState(false);
+
   function formatDateTimeString(dateString: any) {
     const options = {
       weekday: 'long',
@@ -45,7 +46,11 @@ const AddEventScreen = ({navigation}: AddEventScreenProps) => {
 
     return `${formattedDate} ${formattedTime}`;
   }
-  const newDate = formatDateTimeString(date);
+
+  let newDate = formatDateTimeString(date);
+  useEffect(() => {
+    newDate = formatDateTimeString(date);
+  }, [date]);
 
   const handleAddAttendeeClicked = () => {
     setAttendeeData(() => {
@@ -80,7 +85,7 @@ const AddEventScreen = ({navigation}: AddEventScreenProps) => {
             padding: 12,
             marginBottom: 10,
           }}>
-          <Text style={{marginLeft: 15, color: 'black'}}>{`${newDate}`}</Text>
+          <Text style={{marginLeft: 15, color: 'black'}}>{newDate}</Text>
         </TouchableOpacity>
         <DatePicker
           modal
@@ -123,15 +128,17 @@ const AddEventScreen = ({navigation}: AddEventScreenProps) => {
         )}
         <View style={styles.addAttendeesContainer}>
           <Text style={styles.attendeesText}>Attendees:</Text>
-          <TouchableOpacity
-            disabled={disabled}
-            onPress={handleAddAttendeeClicked}>
-            <AntDesign
-              name="pluscircleo"
-              size={30}
-              color={disabled ? 'red' : 'green'}
-            />
-          </TouchableOpacity>
+          {!disabled && (
+            <TouchableOpacity
+              disabled={disabled}
+              onPress={handleAddAttendeeClicked}>
+              <AntDesign
+                name="pluscircleo"
+                size={30}
+                color={disabled ? 'red' : 'green'}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <Text style={{marginLeft: 12}}>
           Number of Attendees added {attendeesList?.length}
@@ -140,8 +147,8 @@ const AddEventScreen = ({navigation}: AddEventScreenProps) => {
         <TouchableOpacity
           style={styles.loginButton}
           onPress={() => {
-            addEvent(eventData.id);
-            navigation.navigate(ROUTES.EVENTLIST);
+            const status = addEvent(eventData.id);
+            if (status) navigation.navigate(ROUTES.EVENTLIST);
           }}>
           <Text style={styles.loginText}>
             {addOrEditEvent === 'Add' ? 'Add Event' : 'Save changes'}

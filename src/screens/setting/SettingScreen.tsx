@@ -12,6 +12,7 @@ const SettingScreen = () => {
   const [filter, setFilter] = useState<string>('Today');
   const [sort, setSort] = useState<string>('Date & Time');
   const [disabled, setDisabled] = useState<boolean>(true);
+
   const toggleSwitch = () => {
     setDisabled(false);
     setIsEnabled(previousState => !previousState);
@@ -44,6 +45,7 @@ const SettingScreen = () => {
     {label: 'Today', value: 'Today'},
     {label: 'Weekly', value: 'Weekly'},
     {label: 'Monthly', value: 'Monthly'},
+    {label: 'All', value: 'All'},
   ];
   const sortData = [
     {label: 'Date & Time', value: 'Date & Time'},
@@ -90,7 +92,6 @@ const SettingScreen = () => {
           setSort(sortPreference);
           setIsEnabled(hoursFormat);
           setDisabled(true);
-          console.log('hiiiiiii');
         }
       } catch (error) {
         console.error('error in settingsss');
@@ -140,7 +141,7 @@ const SettingScreen = () => {
           />
         </View>
       </View>
-      <View style={styles.switchView}>
+      {/* <View style={styles.switchView}>
         <Text style={{fontSize: 16, fontWeight: '500'}}>12 Hour Format</Text>
         <Switch
           trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -149,7 +150,7 @@ const SettingScreen = () => {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-      </View>
+      </View> */}
 
       <TouchableOpacity
         disabled={disabled}
@@ -170,7 +171,7 @@ const SettingScreen = () => {
         style={[
           {
             backgroundColor: 'red',
-            marginTop: 325,
+            marginTop: 450,
           },
           styles.buttonView,
         ]}>

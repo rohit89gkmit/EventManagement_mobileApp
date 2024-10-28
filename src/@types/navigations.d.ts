@@ -17,6 +17,7 @@ declare global {
   type EventListStackParamList = {
     EVENTLIST: undefined;
     ADDEVENT: undefined;
+    EVENTDETAILS: undefined;
   };
 
   type SettingStackParamList = {
@@ -45,7 +46,11 @@ declare global {
     EventListStackParamList,
     ROUTES.ADDEVENT
   >;
-  type EventListScreenProps = BottomTabScreenProps<
+  type EventDetailScreenProps = NativeStackScreenProps<
+    EventListStackParamList,
+    ROUTES.EVENTDETAILS
+  >;
+  type EventListScreenProps = NativeStackScreenProps<
     EventListStackParamList,
     ROUTES.EVENTLIST
   >;

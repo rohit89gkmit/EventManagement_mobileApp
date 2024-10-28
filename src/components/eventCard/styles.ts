@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   headingText: {
+    width: 150,
     marginVertical: 5,
     fontSize: 20,
     fontWeight: '400',

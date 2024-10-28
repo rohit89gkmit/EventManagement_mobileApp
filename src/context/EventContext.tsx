@@ -34,7 +34,7 @@ export const EventContext = createContext<eventContextType>({
   confirm: 'No',
   setAttendeeData: () => {},
   validateFormData: () => {},
-  addEvent: () => {},
+  addEvent: () => false,
   removeAttendeeFromList: () => {},
   editAttendeeFromList: () => {},
   addAttendee: () => {},
@@ -163,13 +163,16 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
       console.log('setting in storage');
       addEventList(arr);
       console.log('success');
+      return true;
     }
+    return false;
   };
 
   const editEventFromList = (eventId: number) => {
     const selectedEvent = eventList.find(({id}) => id === eventId);
     if (selectedEvent) {
       setAddOrEditEvent('Edit');
+      console.log('selected event is ', selectedEvent.date);
 
       if (selectedEvent.attendees) {
         const updatedAttendees = [...selectedEvent.attendees];
@@ -178,6 +181,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
           Number(selectedEvent.limit) <= updatedAttendees.length;
         setdisabled(isDisabled);
       }
+      setDate(new Date(selectedEvent.date));
       setEventData(selectedEvent);
     }
   };
@@ -206,7 +210,7 @@ export const EventProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const removeAttendeeFromList = (attendeeEmail: string) => {
     let arr = [...attendeesList];
     arr = arr.filter(({email}) => email !== attendeeEmail);
-    if (eventData.limit > attendeesList.length) setdisabled(false);
+    // if (eventData.limit > attendeesList.length) setdisabled(false);
     setattendeesList(arr);
   };
   const editAttendeeFromList = (attendeeEmail: string) => {

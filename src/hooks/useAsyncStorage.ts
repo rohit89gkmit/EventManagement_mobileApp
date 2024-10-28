@@ -26,6 +26,58 @@ const useAsyncStorage = () => {
     }
   };
 
+  const getAllUserNames = async () => {
+    try {
+      const allKeys = await AsyncStorage.getAllKeys();
+      const allValues = await AsyncStorage.multiGet(allKeys);
+
+      const usernames = allValues
+        .map(([key, value]) => {
+          try {
+            if (key !== 'currentStorageKey') {
+              const parsedValue = JSON.parse(value as string);
+              return parsedValue.username;
+            }
+          } catch (error) {
+            console.error('Error parsing value for key:', key, error);
+            return null;
+          }
+        })
+        .filter(username => username !== null && username !== undefined); // Filter out any nulls if parsing fails
+
+      return usernames;
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      return [];
+    }
+  };
+
+  const getAllEmails = async () => {
+    try {
+      const allKeys = await AsyncStorage.getAllKeys();
+      const allValues = await AsyncStorage.multiGet(allKeys);
+
+      const usernames = allValues
+        .map(([key, value]) => {
+          try {
+            if (key !== 'currentStorageKey') {
+              const parsedValue = JSON.parse(value as string);
+              // console.log(parsedValue, parsedValue.email);
+              return parsedValue.email;
+            }
+          } catch (error) {
+            console.error('Error parsing value for key:', key, error);
+            return null;
+          }
+        })
+        .filter(email => email !== null && email !== undefined); // Filter out any nulls if parsing fails
+
+      return usernames;
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      return [];
+    }
+  };
   const addEventList = async (newEventList: eventFormDataType[]) => {
     try {
       const currentStorageKey = await AsyncStorage.getItem('currentStorageKey');
@@ -54,6 +106,8 @@ const useAsyncStorage = () => {
     saveSignupData,
     getLoginData,
     addEventList,
+    getAllUserNames,
+    getAllEmails,
   };
 };
 

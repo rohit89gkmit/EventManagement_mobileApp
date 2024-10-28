@@ -14,7 +14,7 @@ declare global {
     confirmationText: string;
     confirm: string;
     validateFormData: () => void;
-    addEvent: (eventId: number) => void;
+    addEvent: (eventId: number) => boolean;
     removeAttendeeFromList: (email: string) => void;
     editAttendeeFromList: (email: string) => void;
     addAttendee: (attendeeEmail: string) => void;

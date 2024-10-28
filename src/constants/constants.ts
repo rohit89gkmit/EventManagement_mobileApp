@@ -1,4 +1,4 @@
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
+const emailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
 const nameRegex = /^[A-Za-z ]{2,}$/;
 const ageRegex = /^(1[89]|[2-9]\d|100)$/;
 const usernameRegex = /^[A-Za-z0-9_]{3,}$/;

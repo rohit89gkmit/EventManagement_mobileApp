@@ -20,8 +20,13 @@ const EventCard = ({
   date,
   setConfirmStatus,
 }: eventCardProps) => {
-  const {editEventFromList, removeEventFromList, setModalVisible} =
-    useContext(EventContext);
+  const {
+    editEventFromList,
+    removeEventFromList,
+    setModalVisible,
+    eventList,
+    setattendeesList,
+  } = useContext(EventContext);
 
   const {navigate} = useNavigation();
   const handleEditEventClicked = () => {
@@ -31,6 +36,12 @@ const EventCard = ({
 
   const handleDeleteEventClicked = () => {
     setModalVisible(true);
+  };
+
+  const handleEventClicked = () => {
+    const event: any = eventList.find(event => event.id === id);
+    setattendeesList(event?.attendees);
+    navigate(ROUTES.EVENTDETAILS, event);
   };
 
   function formatDateString(dateString: any) {
@@ -58,8 +69,10 @@ const EventCard = ({
   }, [confirmStatus]);
 
   return (
-    <View style={styles.cardContainer}>
-      <Text style={styles.headingText}>{title}</Text>
+    <TouchableOpacity onPress={handleEventClicked} style={styles.cardContainer}>
+      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingText}>
+        {title}
+      </Text>
 
       <View style={{flexDirection: 'row', gap: 50}}>
         <View style={{gap: 5}}>
@@ -73,7 +86,9 @@ const EventCard = ({
           <View style={styles.viewContainer}>
             <FontAwesome6 name="location-dot" size={16} color="black" />
             <View style={[styles.valueContainer, {marginLeft: 5}]}>
-              <Text>{location}</Text>
+              <Text numberOfLines={1} ellipsizeMode="tail">
+                {location}
+              </Text>
             </View>
           </View>
 
@@ -102,7 +117,7 @@ const EventCard = ({
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default EventCard;

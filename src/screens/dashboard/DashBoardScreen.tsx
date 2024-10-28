@@ -1,12 +1,15 @@
 import {Text, View} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import EventContext from '@src/context/EventContext';
-import {months} from 'moment';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {styles} from './styles';
 import {countEvents} from '@src/constants/CountEvents';
 
 const DashBoardScreen = () => {
   const {eventList} = useContext(EventContext);
+
+  const isFocused = useIsFocused();
+
   const [eventSummary, setEventSummary] = useState({
     today: 0,
     week: 0,
@@ -14,16 +17,20 @@ const DashBoardScreen = () => {
     total: 0,
   });
 
-  useEffect(() => {
-    const {todayCount, weekCount, monthCount, totalCount} =
-      countEvents(eventList);
-    setEventSummary({
-      today: todayCount,
-      week: weekCount,
-      month: monthCount,
-      total: totalCount,
-    });
-  }, [eventList]);
+  useEffect(
+    useCallback(() => {
+      const {todayCount, weekCount, monthCount, totalCount} =
+        countEvents(eventList);
+      setEventSummary({
+        today: todayCount,
+        week: weekCount,
+        month: monthCount,
+        total: totalCount,
+      });
+    }, [eventList]),
+    [isFocused, eventList],
+  );
+
   return (
     <View style={{padding: 20, paddingHorizontal: 60}}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

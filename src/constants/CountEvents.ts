@@ -1,17 +1,35 @@
 export const countEvents = (eventList: eventFormDataType[]) => {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const startOfWeek = (date: Date) => {
-    const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(date.setDate(diff));
+    const copiedDate = new Date(date);
+    const day = copiedDate.getDay();
+    const diff = copiedDate.getDate() - day + (day === 0 ? -6 : 1);
+    copiedDate.setDate(diff);
+    copiedDate.setHours(0, 0, 0, 0);
+    return copiedDate;
   };
 
   const startOfMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1);
+    const startMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    startMonth.setHours(0, 0, 0, 0);
+    return startMonth;
   };
 
-  const weekStart = startOfWeek(new Date(today));
-  const monthStart = startOfMonth(new Date(today));
+  const endOfToday = new Date(today);
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const weekStart = startOfWeek(today);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  weekEnd.setHours(23, 59, 59, 999);
+
+  const monthStart = startOfMonth(today);
+  const monthEnd = new Date(monthStart);
+  monthEnd.setMonth(monthEnd.getMonth() + 1);
+  monthEnd.setDate(0);
+  monthEnd.setHours(23, 59, 59, 999);
 
   let todayCount = 0;
   let weekCount = 0;
@@ -20,19 +38,30 @@ export const countEvents = (eventList: eventFormDataType[]) => {
 
   eventList.forEach(event => {
     const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
 
-    if (eventDate.toDateString() === today.toDateString()) {
+    if (
+      eventDate.getTime() >= today.getTime() &&
+      eventDate.getTime() <= endOfToday.getTime()
+    ) {
       todayCount++;
     }
 
-    if (eventDate >= weekStart && eventDate <= today) {
+    if (
+      eventDate.getTime() >= weekStart.getTime() &&
+      eventDate.getTime() <= weekEnd.getTime()
+    ) {
       weekCount++;
     }
 
-    if (eventDate >= monthStart && eventDate <= today) {
+    if (
+      eventDate.getTime() >= monthStart.getTime() &&
+      eventDate.getTime() <= monthEnd.getTime()
+    ) {
       monthCount++;
     }
   });
+
   return {
     todayCount,
     weekCount,
