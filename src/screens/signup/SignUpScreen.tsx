@@ -44,21 +44,33 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
   const [error, setError] = useState(initialErrorObj);
   const [gender, setGender] = useState<string>('Male');
 
-  const isUserNameExists = (currUserName: string) => {
+  const isUserNameExists = async (currUserName: string) => {
     const {getAllUserNames} = useAsyncStorage();
-    getAllUserNames().then(data => {
-      return data.some(({username}) => username === currUserName);
-    });
+
+    try {
+      const data = await getAllUserNames();
+      const isExists = data.some(username => username === currUserName);
+      console.log('username with', currUserName, 'exists:', isExists);
+      return isExists;
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      return false;
+    }
   };
 
-  const isExistsEmail = (currEmail: string) => {
+  const isExistsEmail = async (currEmail: string) => {
     const {getAllEmails} = useAsyncStorage();
-    getAllEmails().then(data => {
-      return data.some(({email}) => email === currEmail);
-    });
+    try {
+      const data = await getAllEmails();
+      const isExists = data.some(email => email === currEmail);
+      return isExists;
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      return false;
+    }
   };
 
-  const validateSignUpForm = () => {
+  const validateSignUpForm = async () => {
     const data = {...signUpData};
     const errorObj = initialErrorObj;
     let allTrue = true;
@@ -77,7 +89,7 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
       errorObj.email = 'Invalid Email format';
       allTrue = false;
     }
-    if (isExistsEmail(data.email)) {
+    if (await isExistsEmail(data.email)) {
       errorObj.email = 'Email already exists';
       allTrue = false;
     }
@@ -91,13 +103,11 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     if (!data.username) {
       errorObj.username = 'Username is required';
       allTrue = false;
-    }
-    if (!usernameRegex.test(data.username)) {
+    } else if (!usernameRegex.test(data.username)) {
       errorObj.username =
         'Username can only contain letters, numbers, or underscores';
       allTrue = false;
-    }
-    if (isUserNameExists(data.username)) {
+    } else if (await isUserNameExists(data.username)) {
       console.log('sss');
       errorObj.username = 'Username already exists';
       allTrue = false;
@@ -120,10 +130,11 @@ const SignUpScreen = ({navigation}: SignUpScreenProps) => {
     return allTrue;
   };
 
-  const handleSignUpClicked = () => {
+  const handleSignUpClicked = async () => {
     const isValidate = validateSignUpForm();
+    setError(initialErrorObj);
     const {saveSignupData} = useAsyncStorage();
-    if (isValidate) {
+    if (await isValidate) {
       saveSignupData(signUpData);
       navigation.navigate(ROUTES.LOGIN);
     }

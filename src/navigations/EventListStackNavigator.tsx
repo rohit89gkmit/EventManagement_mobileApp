@@ -16,16 +16,13 @@ import {colors} from '@src/resources/colors';
 import {useNavigation} from '@react-navigation/native';
 
 const Stack = createStackNavigator<EventListStackParamList>();
-const EventListStackNavigator = ({
-  navigation,
-  route,
-}: EventListStackScreenProps) => {
-  // const navigation = useNavigation<NavigationProp<>>();
-  // const route = useRoute<RouteProp<EventListStackScreenProps>>();
+const EventListStackNavigator = () => {
+  const navigation = useNavigation();
+  const route = useRoute<RouteProp<EventListStackScreenProps>>();
 
-  useEffect(() => {
-    console.warn('Current Route: ', route);
-  }, [route]);
+  // useEffect(() => {
+  //   console.warn('Current Route: ', route);
+  // }, [route]);
 
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? ROUTES.EVENTLIST;
@@ -69,7 +66,7 @@ const EventListStackNavigator = ({
           headerLeft: () => (
             <TouchableOpacity
               style={styles.backButton}
-              onPress={navigation.goBack}>
+              onPress={() => navigation.navigate(ROUTES.EVENTLIST)}>
               <Ionicons
                 name={'arrow-back-outline'}
                 color={colors.primary}
@@ -95,7 +92,7 @@ const EventListStackNavigator = ({
           headerLeft: ({}) => (
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate(ROUTES.EVENTLIST)}>
               <Ionicons
                 name={'arrow-back-outline'}
                 color={colors.primary}

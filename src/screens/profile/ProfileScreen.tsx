@@ -119,20 +119,6 @@ const ProfileScreen = () => {
         </TouchableOpacity> */}
       </View>
 
-      <View style={styles.detailsContainer}>
-        <View style={styles.iconName}>
-          <MaterialCommunityIcons
-            name="lock"
-            size={26}
-            color={colors.secondary}
-          />
-          <Text style={styles.text}>***********</Text>
-        </View>
-        {/* <TouchableOpacity>
-          <Feather name="edit" size={22} color={colors.secondary} />
-        </TouchableOpacity> */}
-      </View>
-
       <TouchableOpacity
         onPress={handleLogOutClicked}
         style={styles.detailsContainer}>

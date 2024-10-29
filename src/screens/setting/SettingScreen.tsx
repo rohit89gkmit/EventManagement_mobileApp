@@ -171,7 +171,7 @@ const SettingScreen = () => {
         style={[
           {
             backgroundColor: 'red',
-            marginTop: 450,
+            marginTop: 400,
           },
           styles.buttonView,
         ]}>

@@ -49,7 +49,8 @@ export const styles = StyleSheet.create({
   },
   errorTextMessage: {
     color: 'red',
-    marginLeft: 12,
+    marginLeft: 17,
+    marginTop: -10,
   },
   genderContainer: {
     borderWidth: 1,
